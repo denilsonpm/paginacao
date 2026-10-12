@@ -1,4 +1,3 @@
-
 #ifndef CARREGAR_SEQUENCIA_H
 #define CARREGAR_SEQUENCIA_H
 
