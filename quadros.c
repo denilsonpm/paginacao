@@ -13,9 +13,10 @@ Memoria *m = memoria_criar(4);
     printf("Memoria criada com %d quadros.\n", m->n_quadros);
 
     memoria_destruir(m);
-
-    return 0;
- } */
+     
+    int indice = memoria_buscar(m,4);
+    // procura a pagina 4 na sequencia e devolve o indice da pagina ou -1 se n tiver.
+    */
 Memoria *memoria_criar(int n_quadros) {
     if (n_quadros <= 0) {
         return NULL;
@@ -48,9 +49,24 @@ Memoria *memoria_criar(int n_quadros) {
 }
 
 void memoria_destruir(Memoria *m) {
-    // Implementar funcao
+    if (m == NULL){
+        return;
+    }
+
+    free(m->q);
+    free(m);
 }
 
 int memoria_buscar(const Memoria *m, int pagina) {
-    // Implementar funcao
+    if (m == NULL) {
+        return -1;
+    }
+
+    for (int i = 0; i < m->n_quadros; i++) {
+        if (m->q[i].pagina == pagina) {
+            return i;
+        }
+    }
+
+    return -1;
 }
