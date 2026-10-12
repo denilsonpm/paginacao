@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "traco.h"
 
 /*  Como chamar na main
