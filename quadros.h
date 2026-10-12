@@ -1,3 +1,6 @@
+#ifndef QUADROS_H
+#define QUADROS_H
+
 #define VAZIO -1
 
 typedef struct {
@@ -16,3 +19,5 @@ int ocupados;
 Memoria *memoria_criar(int n_quadros); /* todos VAZIO */
 void memoria_destruir(Memoria *m);
 int memoria_buscar(const Memoria *m, int pagina); /* índice ou -1 */
+
+#endif
