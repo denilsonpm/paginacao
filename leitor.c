@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include "leitor.h"
 
   /*Usar o free(seq) dps de usar
   para chamar 
