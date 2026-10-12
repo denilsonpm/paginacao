@@ -1,5 +1,5 @@
-#ifndef CARREGAR_SEQUENCIA_H
-#define CARREGAR_SEQUENCIA_H
+#ifndef LEITOR_H
+#define LEITOR_H
 
 int *carregar_sequencia(const char *caminho, int *tamanho);
 
