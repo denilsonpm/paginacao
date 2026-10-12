@@ -1,6 +1,8 @@
 #ifndef TRACO_H
 #define TRACO_H
 
+#include "quadros.h"
+
 typedef struct {
 int total_refs;
 int total_faltas;
