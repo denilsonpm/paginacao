@@ -5,7 +5,7 @@
 
   /*Usar o free(seq) dps de usar
   para chamar 
-  int *tamanho;
+  int tamanho;
   
   int *seq = carregar_sequencia("sequencia.txt", &tamanho);*/
 int *carregar_sequencia(const char *caminho, int *tamanho) {
@@ -29,7 +29,7 @@ int *carregar_sequencia(const char *caminho, int *tamanho) {
         if (linha[0] == '#') continue;
 
         char *resto;
-        char *token = strtok(linha, " \t\n");
+        char *token = strtok(linha, " \t\n\r");
 
         while (token != NULL) {
             errno = 0;
@@ -61,7 +61,7 @@ int *carregar_sequencia(const char *caminho, int *tamanho) {
 
                 seq = temp;
             }
-
+            /* Incrementa */
             seq[n] = (int)numero;
             n++;
 
