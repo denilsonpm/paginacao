@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include<limits.h>
 #include "leitor.h"
 
   /*Usar o free(seq) dps de usar
@@ -41,7 +42,7 @@ int *carregar_sequencia(const char *caminho, int *tamanho) {
             if (resto == token || *resto != '\0' ||
                 errno == ERANGE ||
                 numero <  ||
-                numero > 2147483647L) {
+                numero > INT_MAX) {
                 fprintf(stderr, "Número inválido: %s\n", token);
                 free(seq);
                 fclose(f);
