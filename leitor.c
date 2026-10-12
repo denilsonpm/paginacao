@@ -39,7 +39,7 @@ int *carregar_sequencia(const char *caminho, int *tamanho) {
           
             if (resto == token || *resto != '\0' ||
                 errno == ERANGE ||
-                numero < -2147483647L - 1 ||
+                numero <  ||
                 numero > 2147483647L) {
                 fprintf(stderr, "Número inválido: %s\n", token);
                 free(seq);
