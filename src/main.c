@@ -25,7 +25,7 @@ int main() {
     int n_quadros = 3;
     int proxima_vitima = 0;
 
-    int *seq = carregar_sequencia("Belady.txt", &tamanho);
+    int *seq = carregar_sequencia("entradas/Belady.txt", &tamanho);
 
     if (seq == NULL) {
         return 1;
