@@ -53,3 +53,14 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Resultados da simulação
+resultados/
+
+# Pastas de compilação
+build/
+bin/
+
+# Arquivos temporários
+*.tmp
+*.log
