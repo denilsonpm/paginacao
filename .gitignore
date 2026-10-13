@@ -64,3 +64,6 @@ bin/
 # Arquivos temporários
 *.tmp
 *.log
+
+# Executável do simulador no Linux
+/simulador
