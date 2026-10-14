@@ -4,7 +4,7 @@
 #include "traco.h"
 #include "algoritmos.h"
 
-int executar_lru(const int *seq, int n, int n_quadros, Traco *t) {
+int executar_otimo(const int *seq, int n, int n_quadros, Traco *t) {
   Memoria *m = memoria_criar(n_quadros);
   for (int i = 0; i < n; i++) {
     int pag = seq[i];
