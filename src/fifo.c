@@ -46,8 +46,6 @@ int executar_fifo(const int *seq, int n, int n_quadros, Traco *t) {
   return 0;
 }
 
-typedef struct { int *v; int ini, fim, qtd, cap; } Fila;
-
 Fila criar_fila(int n_quadros){
   Fila f;
 
@@ -79,7 +77,7 @@ int fila_remover(Fila *f) {
   return x;
 }
 
-void destruir_fila(Fila f){
+void destruir_fila(Fila *f){
   free(f->v);
   f->v = NULL;
 }
