@@ -16,8 +16,8 @@ int n_quadros;
 int ocupados;
 } Memoria;
 
-Memoria *memoria_criar(int n_quadros); /* todos VAZIO */
-void memoria_destruir(Memoria *m);
-int memoria_buscar(const Memoria *m, int pagina); /* índice ou -1 */
+Memoria *criar_memoria(int n_quadros); /* todos VAZIO */
+void destruir_memoria(Memoria *m);
+int buscar(const Memoria *m, int pagina); /* índice ou -1 */
 
 #endif
