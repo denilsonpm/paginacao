@@ -19,11 +19,11 @@ algoritmo,num_quadros,total_refs,total_faltas,taxa
 #include "leitor.h"
 #include "quadros.h"
 #include "traco.h"
+#include "algoritmos.h"
 
 int main() {
     int tamanho;
     int n_quadros = 3;
-    int proxima_vitima = 0;
 
     int *seq = carregar_sequencia("entradas/Belady.txt", &tamanho);
 
@@ -31,56 +31,20 @@ int main() {
         return 1;
     }
 
-    Memoria *m = memoria_criar(n_quadros);
+    Traco t;
 
-    if (m == NULL) {
+    iniciar_traco(&t, tamanho, n_quadros, 1);
+
+    if (executar_fifo(seq, tamanho, n_quadros, &t) != 0) {
+        destruir_traco(&t);
         free(seq);
         return 1;
     }
 
-    Traco t = {0, 0, 1};
+    imprimir_resumo(&t, "FIFO");
 
-    for (int i = 0; i < tamanho; i++) {
-
-        int pagina = seq[i];
-        int indice = memoria_buscar(m, pagina);
-
-        int falta = (indice == -1);
-        int vitima = VAZIO;
-
-        if (falta) {
-
-             if (m->ocupados < m->n_quadros) {
-
-                m->q[m->ocupados].pagina = pagina;
-                m->ocupados++;
-
-            } else {
-
-                vitima = m->q[proxima_vitima].pagina;
-
-                m->q[proxima_vitima].pagina = pagina;
-
-                proxima_vitima =
-                    (proxima_vitima + 1) % m->n_quadros;
-            }
-        }
-
-        registrar_passo(&t, pagina, m, falta, vitima);
-    }
-
-   imprimir_resumo(&t, "FIFO", n_quadros);
-
-    salvar_resultado(
-        "FIFO",
-        n_quadros,
-        t.total_faltas,
-        t.total_refs - t.total_faltas,
-        t.total_faltas - n_quadros
-    );
-    
-    memoria_destruir(m);
+    destruir_traco(&t);
     free(seq);
-    
+
     return 0;
 }
