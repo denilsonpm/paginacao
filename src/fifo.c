@@ -5,12 +5,16 @@
 #include "algoritmos.h"
 
 int executar_lru(const int *seq, int n, int n_quadros, Traco *t) {
+  
   Memoria *m = memoria_criar(n_quadros);
+  
   for (int i = 0; i < n; i++) {
+    
     int pag = seq[i];
     int idx = memoria_buscar(m, pag);
+    
     if (idx >= 0) {
-      /* ACERTO: FIFO não faz nada; LRU/SC/LFU atualizam algo */
+      /* ACERTO: FIFO não faz nada*/
     } else if (m->ocupados < n_quadros) {
       /* FALTA com quadro livre: carregar no primeiro vazio */
     } else {
@@ -22,6 +26,12 @@ int executar_lru(const int *seq, int n, int n_quadros, Traco *t) {
 }
 
 typedef struct { int *v; int ini, fim, qtd, cap; } Fila;
+
+Fila criar_fila(int n_quadros){
+  Fila f;
+
+  f.v = malloc(n_quadros * sizeof(int));
+} 
 
 void fila_inserir(Fila *f, int x) {
   f->v[f->fim] = x;
