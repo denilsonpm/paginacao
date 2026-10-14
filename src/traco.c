@@ -1,57 +1,36 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "traco.h"
 
-/*  Como chamar na main
-    int tamanho;
-    int *seq = carregar_sequencia("sequencia.txt", &tamanho);
+void iniciar_traco(Traco *t, int n, int n_quadros, int verbose) {
+    *t = (Traco){0};
+    t->verbose = verbose;
+    t->n_quadros = n_quadros;
 
-    if (seq == NULL) {
-        return 1;
-    }
+    if (verbose) {
+        t->passos = calloc(n, sizeof(Passo));
 
-    Memoria *m = memoria_criar(3);
-
-    if (m == NULL) {
-        free(seq);
-        return 1;
-    }
-
-    Traco t = {0, 0, 1}; // com verbose
-
-    for (int i = 0; i < tamanho; i++) {
-        int pagina = seq[i];
-
-        int indice = memoria_buscar(m, pagina);
-
-        int falta = (indice == -1);
-        int vitima = VAZIO;
-
-        if (falta == 1) {
-            if (m->ocupados < m->n_quadros) {
-                m->q[m->ocupados].pagina = pagina;
-                m->ocupados++;
-            } else {
-                // Aqui entraria o algoritmo FIFO, LRU etc.
-            }
+        if (t->passos == NULL) {
+            exit(EXIT_FAILURE);
         }
 
-        registrar_passo(&t, pagina, m, falta, vitima);
+        for (int i = 0; i < n; i++) {
+            t->passos[i].quadros = malloc(n_quadros * sizeof(int));
+
+            if (t->passos[i].quadros == NULL) {
+                destruir_traco(t);
+                exit(EXIT_FAILURE);
+            }
+        }
     }
+}
 
-    imprimir_resumo(&t, "Algoritmo", m->n_quadros);
-
-    memoria_destruir(m);
-    free(seq);*/
 void registrar_passo(Traco *t, int ref, const Memoria *m,
                     int falta, int vitima) {
-    if (t == NULL) {
-        return;
-    }
 
-    t->total_refs++;
+    int i = t->total_refs++;
 
-    if (falta == 1) {
+    if (falta) {
         t->total_faltas++;
     }
 
@@ -59,94 +38,68 @@ void registrar_passo(Traco *t, int ref, const Memoria *m,
         return;
     }
 
-    // Imprime o cabeçalho apenas na primeira referência
-    if (t->total_refs == 1) {
-        printf("%-5s %-12s %s\n", "Ref", "Quadros", "Status");
+    Passo *p = &t->passos[i];
+
+    p->referencia = ref;
+    p->falta = falta;
+    p->vitima = vitima;
+
+    for (int j = 0; j < t->n_quadros; j++) {
+        p->quadros[j] = m->q[j].pagina;
     }
-
-    printf("%-5d [", ref);
-    
-    if (m != NULL) {
-        for (int i = 0; i < m->n_quadros; i++) {
-            if (i > 0) {
-                printf(",");
-            }
-
-            if (m->q[i].pagina == VAZIO) {
-                printf("-");
-            } else {
-                printf("%d", m->q[i].pagina);
-            }
-        }
-    }
-
-    printf("]");
-
-    // Alinhamento da coluna Status
-    // Considerando uma largura mínima de 12 caracteres
-    int tamanho = 2;
-
-    if (m != NULL) {
-        tamanho += m->n_quadros - 1;
-
-        for (int i = 0; i < m->n_quadros; i++) {
-            if (m->q[i].pagina == VAZIO) {
-                tamanho++;
-            } else {
-                tamanho += snprintf(NULL, 0, "%d", m->q[i].pagina);
-            }
-        }
-    }
-
-    for (int i = tamanho; i < 12; i++) {
-        printf(" ");
-    }
-
-    // Coluna Status
-    if (falta) {
-        printf("FAULT");
-
-        if (vitima != VAZIO) {
-            printf(" (sai %d)", vitima);
-        }
-    } else {
-        printf("HIT");
-    }
-
-    printf("\n");
 }
-void imprimir_resumo(const Traco *t, const char *algoritmo,
-                    int n_quadros) {
-    if (t == NULL) {
-        return;
-    }
+
+void imprimir_resumo(const Traco *t, const char *algoritmo) {
 
     printf("\nAlgoritmo: %s\n", algoritmo);
-    printf("Quadros: %d\n", n_quadros);
+    printf("Quadros: %d\n\n", t->n_quadros);
+
+    if (t->verbose) {
+        printf("Ref\tQuadros\t\tStatus\n");
+
+        for (int i = 0; i < t->total_refs; i++) {
+            Passo *p = &t->passos[i];
+
+            printf("%d\t[", p->referencia);
+
+            for (int j = 0; j < t->n_quadros; j++) {
+                if (j > 0) printf(",");
+
+                if (p->quadros[j] == VAZIO)
+                    printf("-");
+                else
+                    printf("%d", p->quadros[j]);
+            }
+
+            printf("]\t\t");
+
+            if (p->falta) {
+                printf("FAULT");
+
+                if (p->vitima != VAZIO)
+                    printf(" (sai %d)", p->vitima);
+            } else {
+                printf("HIT");
+            }
+
+            printf("\n");
+        }
+
+        printf("\n");
+    }
+
     printf("Total de referencias: %d\n", t->total_refs);
     printf("Faltas de pagina: %d\n", t->total_faltas);
     printf("Acertos de pagina: %d\n",
            t->total_refs - t->total_faltas);
 }
 
-void salvar_resultado(const char *algoritmo, int quadros,
-                     int faltas, int acertos, int substituicoes) {
+void destruir_traco(Traco *t) {
+    if (t->passos != NULL) {
+        for (int i = 0; i < t->total_refs; i++) {
+            free(t->passos[i].quadros);
+        }
 
-    FILE *arquivo = fopen("resultados/resultados.csv", "a+");
-
-    if (arquivo == NULL) {
-        perror("Erro ao abrir CSV");
-        return;
+        free(t->passos);
     }
-
-    fseek(arquivo, 0, SEEK_END);
-
-    if (ftell(arquivo) == 0) {
-        fprintf(arquivo, "Algoritmo,Quadros,Faltas,Acertos,Substituicoes\n");
-    }
-
-    fprintf(arquivo, "%s,%d,%d,%d,%d\n",
-            algoritmo, quadros, faltas, acertos, substituicoes);
-
-    fclose(arquivo);
 }
