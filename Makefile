@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -MMD -MP
 
 # provisorio dps substituir para SRC = $(wildcard src/*.c)
-SRC = src/main.c src/leitor.c src/quadros.c src/traco.c
+SRC = src/main.c src/leitor.c src/quadros.c src/traco.c/fifo.c
 OBJ = $(SRC:.c=.o)
 DEP = $(OBJ:.o=.d)
 EXEC = simulador
