@@ -3,7 +3,7 @@
 
 #include "traco.h"
 
-typedef struct {int *v; int ini, fim, qtd, cap} Fila;
+typedef struct {int *v; int ini, fim, qtd, cap;} Fila;
 
 Fila criar_fila(int n_quadros);
 
