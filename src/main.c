@@ -69,10 +69,18 @@ int main() {
         registrar_passo(&t, pagina, m, falta, vitima);
     }
 
-    imprimir_resumo(&t, "FIFO", n_quadros);
+   imprimir_resumo(&t, "FIFO", n_quadros);
 
+    salvar_resultado(
+        "FIFO",
+        n_quadros,
+        t.total_faltas,
+        t.total_refs - t.total_faltas,
+        t.total_faltas - n_quadros
+    );
+    
     memoria_destruir(m);
     free(seq);
-
+    
     return 0;
 }
