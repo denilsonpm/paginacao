@@ -128,3 +128,25 @@ void imprimir_resumo(const Traco *t, const char *algoritmo,
     printf("Acertos de pagina: %d\n",
            t->total_refs - t->total_faltas);
 }
+
+void salvar_resultado(const char *algoritmo, int quadros,
+                     int faltas, int acertos, int substituicoes) {
+
+    FILE *arquivo = fopen("resultados/resultados.csv", "a+");
+
+    if (arquivo == NULL) {
+        perror("Erro ao abrir CSV");
+        return;
+    }
+
+    fseek(arquivo, 0, SEEK_END);
+
+    if (ftell(arquivo) == 0) {
+        fprintf(arquivo, "Algoritmo,Quadros,Faltas,Acertos,Substituicoes\n");
+    }
+
+    fprintf(arquivo, "%s,%d,%d,%d,%d\n",
+            algoritmo, quadros, faltas, acertos, substituicoes);
+
+    fclose(arquivo);
+}
