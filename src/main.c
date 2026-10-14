@@ -8,10 +8,10 @@ static const struct { const char *nome; AlgoritmoFn fn; } ALGS[] = {
 ...
 for (int q = q_min; q <= q_max; q++)
 for (size_t a = 0; a < sizeof ALGS / sizeof ALGS[0]; a++) {
-/* TODO: executar, imprimir, gravar linha no CSV:
-algoritmo,num_quadros,total_refs,total_faltas,taxa */
+TODO: executar, imprimir, gravar linha no CSV:
+algoritmo,num_quadros,total_refs,total_faltas,taxa 
 
-}*/
+*/
 
 // main a seguir executando somente um teste
 #include <stdio.h>
