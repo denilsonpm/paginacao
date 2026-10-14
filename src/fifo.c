@@ -4,25 +4,46 @@
 #include "traco.h"
 #include "algoritmos.h"
 
-int executar_lru(const int *seq, int n, int n_quadros, Traco *t) {
+int executar_fifo(const int *seq, int n, int n_quadros, Traco *t) {
   
-  Memoria *m = memoria_criar(n_quadros);
+  Memoria *m = criar_memoria(n_quadros);
+  Fila f = criar_fila(n_quadros);
   
   for (int i = 0; i < n; i++) {
     
     int pag = seq[i];
-    int idx = memoria_buscar(m, pag);
+    int idx = buscar(m, pag);
+    int falta = (idx == -1);
+    int vitima = VAZIO;
     
     if (idx >= 0) {
       /* ACERTO: FIFO não faz nada*/
+      
     } else if (m->ocupados < n_quadros) {
-      /* FALTA com quadro livre: carregar no primeiro vazio */
+      
+      m->q[m->ocupados].pagina = pag;
+      m->ocupados++;
+      
+      fila_inserir(&f, pag);
+      
     } else {
-      /* FALTA com memória cheia: escolher vítima (varia!) */
+
+      vitima = fila_remover(&f);
+
+      int indice = buscar(m, vitima);
+
+      m->q[indice].pagina = pag;
+
+      fila_inserir(&f, pag);
+      
     }
-    /* registrar_passo(...) */
+    registrar_passo(t, pag, m, falta, vitima);
   }
-  ...
+  
+  destruir_fila(&f);
+  destruir_memoria(m);
+
+  return 0;
 }
 
 typedef struct { int *v; int ini, fim, qtd, cap; } Fila;
@@ -31,6 +52,13 @@ Fila criar_fila(int n_quadros){
   Fila f;
 
   f.v = malloc(n_quadros * sizeof(int));
+
+  f.ini = 0;
+  f.fim = 0;
+  f.qtd = 0;
+  f.cap = n_quadros;
+
+  return f;
 } 
 
 void fila_inserir(Fila *f, int x) {
@@ -44,9 +72,14 @@ int fila_remover(Fila *f) {
     return -1;
   }
   
-  f->v[f->ini] = x;
+  int x = f->v[f->ini];
   f->ini = (f->ini + 1) % f->cap;
   f->qtd--;
   
   return x;
+}
+
+void destruir_fila(Fila f){
+  free(f->v);
+  f->v = NULL;
 }
