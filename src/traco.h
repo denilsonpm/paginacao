@@ -14,4 +14,7 @@ void registrar_passo(Traco *t, int ref, const Memoria *m,
 
 void imprimir_resumo(const Traco *t, const char *algoritmo, int n_quadros);
 
+void salvar_resultado(const char *algoritmo, int quadros,
+                     int faltas, int acertos, int substituicoes);
+
 #endif
