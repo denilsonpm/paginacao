@@ -43,7 +43,6 @@
 
     memoria_destruir(m);
     free(seq);*/
-
 void registrar_passo(Traco *t, int ref, const Memoria *m,
                     int falta, int vitima) {
     if (t == NULL) {
@@ -60,28 +59,62 @@ void registrar_passo(Traco *t, int ref, const Memoria *m,
         return;
     }
 
-    printf("Pagina: %d | %s", ref,
-           falta ? "FALTA" : "ACERTO");
-
-    if (vitima != VAZIO) {
-        printf(" | Vitima: %d", vitima);
+    // Imprime o cabeçalho apenas na primeira referência
+    if (t->total_refs == 1) {
+        printf("%-5s %-12s %s\n", "Ref", "Quadros", "Status");
     }
 
+    printf("%-5d [", ref);
+    
     if (m != NULL) {
-        printf(" | Memoria: ");
-
         for (int i = 0; i < m->n_quadros; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+
             if (m->q[i].pagina == VAZIO) {
-                printf("[ ] ");
+                printf("-");
             } else {
-                printf("[%d] ", m->q[i].pagina);
+                printf("%d", m->q[i].pagina);
             }
         }
     }
 
+    printf("]");
+
+    // Alinhamento da coluna Status
+    // Considerando uma largura mínima de 12 caracteres
+    int tamanho = 2;
+
+    if (m != NULL) {
+        tamanho += m->n_quadros - 1;
+
+        for (int i = 0; i < m->n_quadros; i++) {
+            if (m->q[i].pagina == VAZIO) {
+                tamanho++;
+            } else {
+                tamanho += snprintf(NULL, 0, "%d", m->q[i].pagina);
+            }
+        }
+    }
+
+    for (int i = tamanho; i < 12; i++) {
+        printf(" ");
+    }
+
+    // Coluna Status
+    if (falta) {
+        printf("FAULT");
+
+        if (vitima != VAZIO) {
+            printf(" (sai %d)", vitima);
+        }
+    } else {
+        printf("HIT");
+    }
+
     printf("\n");
 }
-
 void imprimir_resumo(const Traco *t, const char *algoritmo,
                     int n_quadros) {
     if (t == NULL) {
