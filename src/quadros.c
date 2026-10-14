@@ -3,7 +3,7 @@
 
 /*
 Como chamar na main.
-Memoria *m = memoria_criar(4);
+Memoria *m = criar_memoria(4);
 
     if (m == NULL) {
         printf("Erro ao criar memoria.\n");
@@ -12,12 +12,12 @@ Memoria *m = memoria_criar(4);
 
     printf("Memoria criada com %d quadros.\n", m->n_quadros);
 
-    memoria_destruir(m);
+    destruir_memoria(m);
      
-    int indice = memoria_buscar(m,4);
+    int indice = buscar(m,4);
     // procura a pagina 4 na sequencia e devolve o indice da pagina ou -1 se n tiver.
     */
-Memoria *memoria_criar(int n_quadros) {
+Memoria *criar_memoria(int n_quadros) {
     if (n_quadros <= 0) {
         return NULL;
     }
@@ -48,7 +48,7 @@ Memoria *memoria_criar(int n_quadros) {
     return m;
 }
 
-void memoria_destruir(Memoria *m) {
+void destruir_memoria(Memoria *m) {
     if (m == NULL){
         return;
     }
@@ -57,7 +57,7 @@ void memoria_destruir(Memoria *m) {
     free(m);
 }
 
-int memoria_buscar(const Memoria *m, int pagina) {
+int buscar(const Memoria *m, int pagina) {
     if (m == NULL) {
         return -1;
     }
