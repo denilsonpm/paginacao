@@ -5,8 +5,6 @@
 
 typedef struct {int *v; int ini, fim, qtd, cap;} Fila;
 
-typedef struct {int valor; struct No *prox; struct No *prev;} No;
-
 Fila criar_fila(int n_quadros);
 
 void fila_inserir(Fila *f, int x);
@@ -16,5 +14,9 @@ int fila_remover(Fila *f);
 void destruir_fila(Fila *f);
 
 int executar_fifo(const int *seq, int n, int n_quadros, Traco *t);
+
+void lru_inserir(Memoria *m, int pag, int passo, int idx);
+
+int lru_escolher_vitima(Memoria *m);
 
 #endif
