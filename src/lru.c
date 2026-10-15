@@ -47,7 +47,7 @@ void lru_inserir(Memoria *m, int pag, int passo, int idx) {
 }
 
 int lru_escolher_vitima(Memoria *m){
-  int menor = -1;
+  int menor = 0;
 
    for (int i = 1; i < m->ocupados; i++) {
         if (m->q[i].ultimo_uso < m->q[menor].ultimo_uso) {
