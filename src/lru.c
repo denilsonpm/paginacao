@@ -38,7 +38,7 @@ int executar_lru(const int *seq, int n, int n_quadros, Traco *t) {
     }
     destruir_memoria(m);
 
-    return faltas;
+    return 0;
 }
 
 void lru_inserir(Memoria *m, int pag, int passo, int idx) {
