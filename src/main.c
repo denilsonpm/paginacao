@@ -35,13 +35,13 @@ int main() {
 
     iniciar_traco(&t, tamanho, n_quadros, 1);
 
-    if (executar_fifo(seq, tamanho, n_quadros, &t) != 0) {
+    if (executar_lru(seq, tamanho, n_quadros, &t) != 0) {
         destruir_traco(&t);
         free(seq);
         return 1;
     }
 
-    imprimir_resumo(&t, "FIFO");
+    imprimir_resumo(&t, "LRU");
 
     destruir_traco(&t);
     free(seq);
