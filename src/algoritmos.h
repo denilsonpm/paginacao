@@ -5,6 +5,8 @@
 
 typedef struct {int *v; int ini, fim, qtd, cap;} Fila;
 
+typedef struct {int valor, prox, prev;} No;
+
 Fila criar_fila(int n_quadros);
 
 void fila_inserir(Fila *f, int x);
