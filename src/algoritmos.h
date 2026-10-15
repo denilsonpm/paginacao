@@ -19,4 +19,6 @@ void lru_inserir(Memoria *m, int pag, int passo, int idx);
 
 int lru_escolher_vitima(Memoria *m);
 
+int executar_lru(const int *seq, int n, int n_quadros, Traco *t);
+
 #endif
