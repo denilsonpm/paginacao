@@ -1,36 +1,60 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "quadros.h"
-#include "traco.h"
-#include "algoritmos.h"
+#include <stdlib.h>      
+#include "quadros.h"     
+#include "traco.h"       
+#include "algoritmos.h"  
 
 int executar_lru(const int *seq, int n, int n_quadros, Traco *t) {
-  Memoria *m = memoria_criar(n_quadros);
-  for (int i = 0; i < n; i++) {
-    int pag = seq[i];
-    int idx = memoria_buscar(m, pag);
-    if (idx >= 0) {
-      /* ACERTO: FIFO não faz nada; LRU/SC/LFU atualizam algo */
-    } else if (m->ocupados < n_quadros) {
-      /* FALTA com quadro livre: carregar no primeiro vazio */
-    } else {
-      /* FALTA com memória cheia: escolher vítima (varia!) */
+    Memoria *m = criar_memoria(n_quadros);
+    int faltas = 0;
+
+    if (m == NULL)
+        return -1;
+
+    for (int i = 0; i < n; i++) {
+        int pag = seq[i];
+        int idx = buscar(m, pag);
+        int falta = (idx == -1);
+        int vitima = VAZIO;
+      
+        if (idx >= 0) {
+            m->q[idx].ultimo_uso = i;
+
+        } else if (m->ocupados < n_quadros) {
+            lru_inserir(m, pag, i,m->ocupados);
+            faltas++;
+            m->ocupados++;
+
+        } else {
+            int idv = lru_escolher_vitima(m);
+
+            vitima = m->q[idv].pagina;
+
+            lru_inserir(m, pag, i, idv);
+
+            faltas++;
+        }
+
+        registrar_passo(t, pag, m, falta, vitima);
     }
-    /* registrar_passo(...) *
-  }
+    destruir_memoria(m);
 
-No criar_no(int v){
-  No n;
-
-  n.valor = v;
-  n.prox = NULL;
-  n.prev = NULL;
+    return faltas;
 }
 
-void lru_inserir(Fila f, No n){
-    n.prox = f.ini;
-    if(f.ini != NULL){
-      f.ini.prev = n;
+void lru_inserir(Memoria *m, int pag, int passo, int idx) {
+    m->q[idx].pagina = pag;
+    m->q[idx].ultimo_uso = passo;
+}
+
+int lru_escolher_vitima(Memoria *m){
+  int menor = -1;
+
+   for (int i = 1; i < m->ocupados; i++) {
+        if (m->q[i].ultimo_uso < m->q[menor].ultimo_uso) {
+            menor = i;
+        }
     }
-    f.ini = n;
+
+  
+  return menor;
 }
