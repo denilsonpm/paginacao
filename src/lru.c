@@ -16,7 +16,21 @@ int executar_lru(const int *seq, int n, int n_quadros, Traco *t) {
     } else {
       /* FALTA com memória cheia: escolher vítima (varia!) */
     }
-    /* registrar_passo(...) */
+    /* registrar_passo(...) *
   }
-  ...
+
+No criar_no(int v){
+  No n;
+
+  n.valor = v;
+  n.prox = NULL;
+  n.prev = NULL;
+}
+
+void lru_inserir(Fila f, No n){
+    n.prox = f.ini;
+    if(f.ini != NULL){
+      f.ini.prev = n;
+    }
+    f.ini = n;
 }
