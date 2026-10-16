@@ -12,6 +12,8 @@ int executar_otimo(const int *seq, int n, int n_quadros, Traco *t) {
     
     int pag = seq[i];
     int idx = buscar(m, pag);
+    int falta = (idx == -1);
+    int vitima = VAZIO;
     
     if (idx >= 0) {
       /* ACERTO: otimo não faz nada*/
@@ -24,7 +26,6 @@ int executar_otimo(const int *seq, int n, int n_quadros, Traco *t) {
       m->ocupados++;
       
     } else {
-      int vitima = -1;
       int maior_distancia = -1;
       
       for (int j = 0; j < m->n_quadros; j++) {
@@ -44,9 +45,13 @@ int executar_otimo(const int *seq, int n, int n_quadros, Traco *t) {
   
         m->q[vitima].pagina = seq[i];      
     }
-    /* registrar_passo(...) */
+    
+    registrar_passo(t, pag, m, falta, vitima);
   }
 
+  destruir_memoria(m);
+
+  return 0;
 }
 
 /* Distancia da próxima ocorrência de ’pag’ em seq[i+1 .. n-1], ou NUNCA. */
