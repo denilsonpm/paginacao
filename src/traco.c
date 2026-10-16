@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "traco.h"
 
 void iniciar_traco(Traco *t, int n, int n_quadros, int verbose) {
@@ -49,7 +50,7 @@ void registrar_passo(Traco *t, int ref, const Memoria *m,
     }
 }
 
-void imprimir_resumo(const Traco *t, const char *algoritmo) {
+void imprimir_resumo(const Traco *t, const char *algoritmo, Memoria *m) {
 
     printf("\nAlgoritmo: %s\n", algoritmo);
     printf("Quadros: %d\n\n", t->n_quadros);
