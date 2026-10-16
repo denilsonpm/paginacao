@@ -21,7 +21,7 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
 
     } else if (m->ocupados < n_quadros) {
       
-      m->q[idx].bit_ref = 1;
+      m->q[m->ocupados].bit_ref = 1;
       m->q[m->ocupados].pagina = pag;
       m->ocupados++;
       
