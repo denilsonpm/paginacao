@@ -6,7 +6,7 @@
 
 #define NUNCA INT_MAX
 
-typedef struct {int *v; int ini, fim, qtd, cap;} Fila;
+typedef struct {int *v; int ini, fim, qtd, cap, pont;} Fila;
 
 typedef struct No {int pagina; int indice; struct No *prox; struct No *prev;struct No *prox_hash;} No;
 
