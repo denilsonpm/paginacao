@@ -35,13 +35,13 @@ int main() {
 
     iniciar_traco(&t, tamanho, n_quadros, 1);
 
-    if (executar_lru(seq, tamanho, n_quadros, &t) != 0) {
+    if (executar_otimo(seq, tamanho, n_quadros, &t) != 0) {
         destruir_traco(&t);
         free(seq);
         return 1;
     }
 
-    imprimir_resumo(&t, "LRU");
+    imprimir_resumo(&t, "OTIMO");
 
     destruir_traco(&t);
     free(seq);
