@@ -6,13 +6,13 @@
 
 int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
   
-  Memoria *m = memoria_criar(n_quadros);
+  Memoria *m = criar_memoria(n_quadros);
   Fila f = criar_fila(n_quadros);
   
   for (int i = 0; i < n; i++) {
     
     int pag = seq[i];
-    int idx = memoria_buscar(m, pag);
+    int idx = buscar(m, pag);
     int falta = (idx == -1);
     int vitima = VAZIO;
     
