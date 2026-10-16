@@ -37,6 +37,7 @@ int proxima_ocorrencia(const int *seq, int n, int i, int pag);
 
 int executar_fifo(const int *seq, int n, int n_quadros, Traco *t);
 int executar_lru(const int *seq, int n, int n_quadros, Traco *t);
+int executar_otimo(const int *seq, int n, int n_quadros, Traco *t);
 
 
 #endif
