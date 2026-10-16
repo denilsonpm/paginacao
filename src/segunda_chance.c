@@ -5,18 +5,55 @@
 #include "algoritmos.h"
 
 int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
+  
   Memoria *m = memoria_criar(n_quadros);
+  Fila f = criar_fila(n_quadros);
+  
   for (int i = 0; i < n; i++) {
+    
     int pag = seq[i];
     int idx = memoria_buscar(m, pag);
+    int falta = (idx == -1);
+    int vitima = VAZIO;
+    
     if (idx >= 0) {
-      /* ACERTO: FIFO não faz nada; LRU/SC/LFU atualizam algo */
+      m->q[idx].bit_ref = 1;
+
     } else if (m->ocupados < n_quadros) {
-      /* FALTA com quadro livre: carregar no primeiro vazio */
+      
+      m->q[m->ocupados].pagina = pag;
+      m->ocupados++;
+      
+      fila_inserir(&f, pag);
+      
     } else {
-      /* FALTA com memória cheia: escolher vítima (varia!) */
+      vitima = fila_remover_SC(&f, m);
+
+      int indice = buscar(m, vitima);
+     
+      m->q[indice].pagina = pag;
+
+      fila_inserir(&f, pag);
+      
     }
-    /* registrar_passo(...) */
+    registrar_passo(t, pag, m, falta, vitima);
   }
-  ...
+  
+  destruir_fila(&f);
+  destruir_memoria(m);
+
+  return 0;
+}
+int fila_remover_SC(Fila *f, Memoria *m) {
+    while (m->q[f->pont].bit_ref == 1) {
+        m->q[f->pont].bit_ref = 0;
+        f->pont = (f->pont + 1) % m->n_quadros;
+    }
+
+    f->fim = f->pont;
+    f->ini = f->pont;
+    
+    f->pont = (f->pont + 1) % m->n_quadros;
+
+    return fila_remover(f);
 }
