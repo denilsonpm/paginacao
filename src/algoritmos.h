@@ -1,7 +1,10 @@
 #ifndef ALGORITMOS_H
 #define ALGORITMOS_H
 
+#include <limits.h>
 #include "traco.h"
+
+#define NUNCA INT_MAX
 
 typedef struct {int *v; int ini, fim, qtd, cap;} Fila;
 
@@ -29,6 +32,8 @@ int lru_inserir(LRU *l, int pag, int idx);
 No *lru_escolher_vitima(LRU *l);
 void lru_substituir(LRU *l, Memoria *m, No *n, int pag, int passo);
 void lru_destruir(LRU *l);
+
+int proxima_ocorrencia(const int *seq, int n, int i, int pag);
 
 int executar_fifo(const int *seq, int n, int n_quadros, Traco *t);
 int executar_lru(const int *seq, int n, int n_quadros, Traco *t);
