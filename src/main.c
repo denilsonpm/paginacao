@@ -41,7 +41,7 @@ int main() {
         return 1;
     }
 
-    imprimir_resumo(&t, "OTIMO");
+    imprimir_resumo(&t, "SEGUNDA CHANCE");
 
     destruir_traco(&t);
     free(seq);
