@@ -33,6 +33,7 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
       int indice = buscar(m, vitima);
      
       m->q[indice].pagina = pag;
+      m->q[indice].bit_ref = 1;      
 
       fila_inserir(&f, pag);
     }
