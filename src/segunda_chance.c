@@ -21,6 +21,7 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
 
     } else if (m->ocupados < n_quadros) {
       
+      m->q[idx].bit_ref = 1;
       m->q[m->ocupados].pagina = pag;
       m->ocupados++;
       
@@ -34,8 +35,10 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
       m->q[indice].pagina = pag;
 
       fila_inserir(&f, pag);
+    }
+    registrar_passo(t, pag, m, falta, vitima);
 
-      if (t->verbose == 1) {
+    if (t->verbose == 1) {
           printf("[");
       
           for (int i = 0; i < m->n_quadros; i++) {
@@ -48,10 +51,7 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
           }
       
           printf("]\n");
-      }
-      
     }
-    registrar_passo(t, pag, m, falta, vitima);
   }
   
   destruir_fila(&f);
