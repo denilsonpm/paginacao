@@ -57,6 +57,21 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
     if (t->verbose) {
         printf("Ref\tQuadros\t\tStatus\n");
 
+       if (strcmp(algoritmo, "Segunda Chance") == 0) {
+          printf("[");
+      
+          for (int i = 0; i < m->n_quadros; i++) {
+              if (i > 0) printf(", ");
+      
+              if (m->q[i].pagina == VAZIO)
+                  printf("-");
+              else
+                  printf("%d:%d", m->q[i].pagina, m->q[i].bit_ref);
+          }
+      
+          printf("]\n");
+      } else {
+
         for (int i = 0; i < t->total_refs; i++) {
             Passo *p = &t->passos[i];
 
@@ -84,6 +99,7 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
 
             printf("\n");
         }
+      }
 
         printf("\n");
     }
