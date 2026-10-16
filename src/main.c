@@ -35,7 +35,7 @@ int main() {
 
     iniciar_traco(&t, tamanho, n_quadros, 1);
 
-    if (executar_otimo(seq, tamanho, n_quadros, &t) != 0) {
+    if (executar_segunda_chance(seq, tamanho, n_quadros, &t) != 0) {
         destruir_traco(&t);
         free(seq);
         return 1;
