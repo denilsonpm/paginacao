@@ -16,8 +16,7 @@ Fila criar_fila(int n_quadros);
 void fila_inserir(Fila *f, int x);
 int fila_remover(Fila *f);
 void destruir_fila(Fila *f);
-
-int executar_lru(const int *seq, int n, int n_quadros, Traco *t);
+int fila_remover_SC(Fila *f, Memoria *m);
 
 int hash(int pagina, int cap);
 No *lru_buscar(LRU *l, int pagina);
@@ -38,6 +37,7 @@ int proxima_ocorrencia(const int *seq, int n, int i, int pag);
 int executar_fifo(const int *seq, int n, int n_quadros, Traco *t);
 int executar_lru(const int *seq, int n, int n_quadros, Traco *t);
 int executar_otimo(const int *seq, int n, int n_quadros, Traco *t);
-
+int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
+  
 
 #endif
