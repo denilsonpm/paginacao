@@ -55,6 +55,7 @@ Fila criar_fila(int n_quadros){
   f.fim = 0;
   f.qtd = 0;
   f.cap = n_quadros;
+  f.pont = 0;
 
   return f;
 } 
