@@ -50,7 +50,7 @@ void registrar_passo(Traco *t, int ref, const Memoria *m,
     }
 }
 
-void imprimir_resumo(const Traco *t, const char *algoritmo, Memoria *m) {
+void imprimir_resumo(const Traco *t, const char *algoritmo) {
 
     printf("\nAlgoritmo: %s\n", algoritmo);
     printf("Quadros: %d\n\n", t->n_quadros);
@@ -59,18 +59,7 @@ void imprimir_resumo(const Traco *t, const char *algoritmo, Memoria *m) {
         printf("Ref\tQuadros\t\tStatus\n");
 
        if (strcmp(algoritmo, "Segunda Chance") == 0) {
-          printf("[");
-      
-          for (int i = 0; i < m->n_quadros; i++) {
-              if (i > 0) printf(", ");
-      
-              if (m->q[i].pagina == VAZIO)
-                  printf("-");
-              else
-                  printf("%d:%d", m->q[i].pagina, m->q[i].bit_ref);
-          }
-      
-          printf("]\n");
+          /* implementado dentro do seu proprio arquivo devido ao bit de referencia*/
       } else {
 
         for (int i = 0; i < t->total_refs; i++) {
