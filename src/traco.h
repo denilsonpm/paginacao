@@ -21,7 +21,7 @@ typedef struct {
 void iniciar_traco(Traco *t, int n, int n_quadros, int verbose);
 void registrar_passo(Traco *t, int ref, const Memoria *m,
                     int falta, int vitima);
-void imprimir_resumo(const Traco *t, const char *algoritmo, Memoria *m);
+void imprimir_resumo(const Traco *t, const char *algoritmo);
 void destruir_traco(Traco *t);
 
 #endif
