@@ -34,6 +34,21 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
       m->q[indice].pagina = pag;
 
       fila_inserir(&f, pag);
+
+      if (t->verbose == 1) {
+          printf("[");
+      
+          for (int i = 0; i < m->n_quadros; i++) {
+              if (i > 0) printf(", ");
+      
+              if (m->q[i].pagina == VAZIO)
+                  printf("-");
+              else
+                  printf("%d:%d", m->q[i].pagina, m->q[i].bit_ref);
+          }
+      
+          printf("]\n");
+      }
       
     }
     registrar_passo(t, pag, m, falta, vitima);
