@@ -27,23 +27,24 @@ int executar_otimo(const int *seq, int n, int n_quadros, Traco *t) {
       
     } else {
       int maior_distancia = -1;
+      int idv = -1;
       
       for (int j = 0; j < m->n_quadros; j++) {
         int prox = proxima_ocorrencia(seq, n, i, m->q[j].pagina);
       
         if (prox == NUNCA) {
-             vitima = j;
+             idv = j;
              break;
         }
       
         if (prox > maior_distancia) {
             maior_distancia = prox;
-            vitima = j;
+            idv = j;
         }  
       }
-        int removida = m->q[vitima].pagina;
+        int vitima = m->q[idv].pagina;
   
-        m->q[vitima].pagina = seq[i];      
+        m->q[idv].pagina = seq[i];      
     }
     
     registrar_passo(t, pag, m, falta, vitima);
