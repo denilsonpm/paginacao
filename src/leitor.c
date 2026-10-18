@@ -10,6 +10,14 @@
   int tamanho;
   
   int *seq = carregar_sequencia("sequencia.txt", &tamanho);*/
+
+/*Carrega uma sequencia de números, de um arq.txt *caminho* e salva o total de elementos
+lidos em *tamanho*, retornando um ponteiro para o vetor preenchido.
+
+Exemplos:
+int tamanho = 0;
+int *seq = carregar_sequencia(seq.txt, &tamanho)
+*/
 int *carregar_sequencia(const char *caminho, int *tamanho) {
     FILE *f = fopen(caminho, "r");
     if (!f) {
@@ -21,6 +29,7 @@ int *carregar_sequencia(const char *caminho, int *tamanho) {
     int *seq = malloc(cap * sizeof(int));
 
     if (seq == NULL) {
+        printf("Falha ao carregar a sequencia.\n");
         fclose(f);
         return NULL;
     }
@@ -82,4 +91,25 @@ int *carregar_sequencia(const char *caminho, int *tamanho) {
     *tamanho = n;
 
     return seq;
+}
+
+/* Imprime os numeros de uma sequencia, dado um ponteiro *seq* e um *tamanho*.
+
+Exemplos:
+arq.txt
+1 2 3 4      5
+int tamanho = 0;
+int *seq = carregar_sequencia("seq.txt", &tamanho);
+imprimir_txt(seq,tamanho);
+[1, 2, 3, 4, 5]
+*/
+void imprimir_txt( const int *seq, int tamanho){
+printf("Sequencia carregada: [");
+    for (int i = 0; i < tamanho; i++) {
+        if (i > 0) {
+            printf(", ");
+        }
+        printf("%d", seq[i]);
+    }
+    printf("]\n");
 }
