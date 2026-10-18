@@ -16,7 +16,7 @@ lidos em *tamanho*, retornando um ponteiro para o vetor preenchido.
 
 Exemplos:
 int tamanho = 0;
-int *seq = carregar_sequencia(seq.txt, &tamanho)
+int *seq = carregar_sequencia(seq.txt, &tamanho);
 */
 int *carregar_sequencia(const char *caminho, int *tamanho) {
     FILE *f = fopen(caminho, "r");
