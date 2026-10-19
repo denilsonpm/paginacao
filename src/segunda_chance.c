@@ -8,6 +8,12 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
   
   Memoria *m = criar_memoria(n_quadros);
   Fila f = criar_fila(n_quadros);
+
+  if (t->verbose == 1) {
+    printf("\nAlgoritmo: SEGUNDA CHANCE\n");
+    printf("Quadros: %d\n\n", n_quadros);
+    printf("Ref\tQuadros\t\tStatus\n");
+  }
   
   for (int i = 0; i < n; i++) {
     
@@ -40,18 +46,7 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
     registrar_passo(t, pag, m, falta, vitima);
 
     if (t->verbose == 1) {
-          printf("[");
-      
-          for (int i = 0; i < m->n_quadros; i++) {
-              if (i > 0) printf(", ");
-      
-              if (m->q[i].pagina == VAZIO)
-                  printf("-");
-              else
-                  printf("%d:%d", m->q[i].pagina, m->q[i].bit_ref);
-          }
-      
-          printf("]\n");
+      imprimir_verboseSC(m, pag, falta, vitima);
     }
   }
   
@@ -72,4 +67,32 @@ int fila_remover_SC(Fila *f, Memoria *m) {
     f->pont = (f->pont + 1) % m->n_quadros;
 
     return fila_remover(f);
+}
+
+
+void imprimir_verboseSC(const Memoria *m, int referencia, int falta, int vitima) {
+
+    printf("%d\t[", referencia);
+
+    for (int i = 0; i < m->n_quadros; i++) {
+        if (i > 0) printf(",");
+
+        if (m->q[i].pagina == VAZIO)
+            printf("-");
+        else
+            printf("%d:%d", m->q[i].pagina, m->q[i].bit_ref);
+    }
+
+    printf("]\t\t");
+
+    if (falta) {
+        printf("FAULT");
+
+        if (vitima != VAZIO)
+            printf(" (sai %d)", vitima);
+    } else {
+        printf("HIT");
+    }
+
+    printf("\n");
 }
