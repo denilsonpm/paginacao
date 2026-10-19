@@ -93,7 +93,7 @@ void imprimir_verboseLFU(const Memoria *m, int referencia, int falta, int vitima
         if (m->q[i].pagina == VAZIO)
             printf("-");
         else
-            printf("%d:%d", m->q[i].contador, m->q[i].bit_ref);
+            printf("%d:%d", m->q[i].pagina, m->q[i].contador);
     }
 
     printf("]\t\t");
