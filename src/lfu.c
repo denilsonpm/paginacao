@@ -55,6 +55,7 @@ int executar_lfu(const int *seq, int n, int n_quadros, Traco *t) {
 
   return 0;
 }
+
 int fila_remover_LFU(Fila *f, Memoria *m) {
     int menor = INT_MAX;
     int pos_vitima = f->ini;
@@ -70,18 +71,20 @@ int fila_remover_LFU(Fila *f, Memoria *m) {
     }
 
     int vitima = f->v[pos_vitima];
+    int ultimo = (f->fim - 1 + f->cap) % f->cap;
 
-    while (pos_vitima != f->fim) {
+    while (pos_vitima != ultimo) {
         int prox = (pos_vitima + 1) % f->cap;
         f->v[pos_vitima] = f->v[prox];
         pos_vitima = prox;
     }
 
-    f->fim = (f->fim - 1 + f->cap) % f->cap;
+    f->fim = ultimo;
     f->qtd--;
 
     return vitima;
 }
+
 
 void imprimir_verboseLFU(const Memoria *m, int referencia, int falta, int vitima) {
 
