@@ -107,16 +107,16 @@ destruir_traco(&t);
 destruir_memoria(mem);
 */
 void imprimir_resumo(const Traco *t, const char *algoritmo) {
+    
+   if (strcmp(algoritmo, "Segunda Chance") == 0) {
+          /* implementado dentro do seu proprio arquivo devido ao bit de referencia*/
+   } else {
 
     printf("\nAlgoritmo: %s\n", algoritmo);
     printf("Quadros: %d\n\n", t->n_quadros);
 
     if (t->verbose) {
         printf("Ref\tQuadros\t\tStatus\n");
-
-       if (strcmp(algoritmo, "Segunda Chance") == 0) {
-          /* implementado dentro do seu proprio arquivo devido ao bit de referencia*/
-      } else {
 
         for (int i = 0; i < t->total_refs; i++) {
             Passo *p = &t->passos[i];
