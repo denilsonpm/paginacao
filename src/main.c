@@ -35,13 +35,13 @@ int main() {
 
     iniciar_traco(&t, tamanho, n_quadros, 1);
 
-    if (executar_segunda_chance(seq, tamanho, n_quadros, &t) != 0) {
+    if (executar_lfu(seq, tamanho, n_quadros, &t) != 0) {
         destruir_traco(&t);
         free(seq);
         return 1;
     }
 
-    imprimir_resumo(&t, "SEGUNDA CHANCE");
+    imprimir_resumo(&t, "LFU");
 
     destruir_traco(&t);
     free(seq);
