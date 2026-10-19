@@ -108,8 +108,8 @@ destruir_memoria(mem);
 */
 void imprimir_resumo(const Traco *t, const char *algoritmo) {
 
-    if (strcmp(algoritmo, "SEGUNDA CHANCE") == 0) {
-        /* Implementado dentro de segunda_chance.c devido ao bit de referencia */
+    if (strcmp(algoritmo, "SEGUNDA CHANCE") == 0 || strcmp(algoritmo, "LFU") == 0) {
+        /* Implementado dentro de seus respectivos arquivos devido ao bit de referencia e contador */
     } else {
 
         printf("\nAlgoritmo: %s\n", algoritmo);
