@@ -34,19 +34,19 @@ int executar_lfu(const int *seq, int n, int n_quadros, Traco *t) {
       fila_inserir(&f, pag);
       
     } else {
-      vitima = fila_remover_SC(&f, m);
+      vitima = fila_remover_LFU(&f, m);
 
       int indice = buscar(m, vitima);
      
       m->q[indice].pagina = pag;
-      m->q[indice].bit_ref = 1;      
+      m->q[indice].contador = 0;      
 
       fila_inserir(&f, pag);
     }
     registrar_passo(t, pag, m, falta, vitima);
 
     if (t->verbose == 1) {
-      imprimir_verboseSC(m, pag, falta, vitima);
+      imprimir_verboseLFU(m, pag, falta, vitima);
     }
   }
   
@@ -55,22 +55,35 @@ int executar_lfu(const int *seq, int n, int n_quadros, Traco *t) {
 
   return 0;
 }
-int fila_remover_SC(Fila *f, Memoria *m) {
-    while (m->q[f->pont].bit_ref == 1) {
-        m->q[f->pont].bit_ref = 0;
-        f->pont = (f->pont + 1) % m->n_quadros;
+int fila_remover_LFU(Fila *f, Memoria *m) {
+    int menor = INT_MAX;
+    int pos_vitima = f->ini;
+
+    for (int i = 0; i < f->qtd; i++) {
+        int pos = (f->ini + i) % f->cap;
+        int idx = buscar(m, f->v[pos]);
+
+        if (m->q[idx].contador < menor) {
+            menor = m->q[idx].contador;
+            pos_vitima = pos;
+        }
     }
 
-    f->fim = f->pont;
-    f->ini = f->pont;
-    
-    f->pont = (f->pont + 1) % m->n_quadros;
+    int vitima = f->v[pos_vitima];
 
-    return fila_remover(f);
+    while (pos_vitima != f->fim) {
+        int prox = (pos_vitima + 1) % f->cap;
+        f->v[pos_vitima] = f->v[prox];
+        pos_vitima = prox;
+    }
+
+    f->fim = (f->fim - 1 + f->cap) % f->cap;
+    f->qtd--;
+
+    return vitima;
 }
 
-
-void imprimir_verboseSC(const Memoria *m, int referencia, int falta, int vitima) {
+void imprimir_verboseLFU(const Memoria *m, int referencia, int falta, int vitima) {
 
     printf("%d\t[", referencia);
 
@@ -80,7 +93,7 @@ void imprimir_verboseSC(const Memoria *m, int referencia, int falta, int vitima)
         if (m->q[i].pagina == VAZIO)
             printf("-");
         else
-            printf("%d:%d", m->q[i].pagina, m->q[i].bit_ref);
+            printf("%d:%d", m->q[i].contador, m->q[i].bit_ref);
     }
 
     printf("]\t\t");
