@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "quadros.h"
-#include <stdlib.h>
+#include <stdio.h>
 
 /*
 Como chamar na main.
