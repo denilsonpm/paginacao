@@ -1,115 +1,180 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-#include <limits.h>
-#include "leitor.h"
+#include "traco.h"
 
-  /*Usar o free(seq) dps de usar
-  para chamar 
-  int tamanho;
-  
-  int *seq = carregar_sequencia("sequencia.txt", &tamanho);*/
-
-/*Carrega uma sequencia de números, de um arq.txt *caminho* e salva o total de elementos
-lidos em *tamanho*, retornando um ponteiro para o vetor preenchido.
+/* Prepara o ambiente com a memória certa alocada, dado um ponteiro traco *t*,
+número de referencias *n*, numero de quadros disponíveis *n_quadros* e uma flag *verbose*.
 
 Exemplos:
-int tamanho = 0;
-int *seq = carregar_sequencia(seq.txt, &tamanho);
+Traco t;
+int n_quadros = 3;
+int total_refs_previstas = 4;
+int verbose = 1;
+iniciar_traco(&t,total_refs_previstas,n_quadros,1);
+destruir_traco(&t);
 */
-int *carregar_sequencia(const char *caminho, int *tamanho) {
-    FILE *f = fopen(caminho, "r");
-    if (!f) {
-        perror(caminho);
-        return NULL;
-    }
+void iniciar_traco(Traco *t, int n, int n_quadros, int verbose) {
+    *t = (Traco){0};
+    t->verbose = verbose;
+    t->n_quadros = n_quadros;
 
-    int cap = 64, n = 0;
-    int *seq = malloc(cap * sizeof(int));
+    if (verbose) {
+        t->passos = calloc(n, sizeof(Passo));
 
-    if (seq == NULL) {
-        printf("Falha ao carregar a sequencia.\n");
-        fclose(f);
-        return NULL;
-    }
-
-    char linha[4096];
-
-    while (fgets(linha, sizeof linha, f)) {
-        if (linha[0] == '#') continue;
-
-        char *resto;
-        char *token = strtok(linha, " \t\n\r");
-
-        while (token != NULL) {
-            errno = 0;
-            long numero = strtol(token, &resto, 10);
-
-            /* validar */
-          
-            if (resto == token || *resto != '\0' ||
-                errno == ERANGE ||
-                numero < 0 ||
-                numero > INT_MAX) {
-                fprintf(stderr, "Número inválido: %s\n", token);
-                free(seq);
-                fclose(f);
-                return NULL;
-            }
-
-            if (n == cap) {
-                cap *= 2;
-
-                int *temp = realloc(seq, cap * sizeof(int));
-
-                if (temp == NULL) {
-                    fprintf(stderr, "Erro: Falha de memória ao tentar expandir o array.\n");
-                    free(seq);
-                    fclose(f);
-                    return NULL;
-                }
-
-                seq = temp;
-            }
-            /* Incrementa */
-            seq[n] = (int)numero;
-            n++;
-
-            token = strtok(NULL, " \t\n\r");
+        if (t->passos == NULL) {
+            exit(EXIT_FAILURE);
         }
     }
-
-    if (ferror(f)) {
-        perror("Erro ao ler o ficheiro");
-        free(seq);
-        fclose(f);
-        return NULL;
-    }
-
-    fclose(f);
-    *tamanho = n;
-
-    return seq;
 }
 
-/* Imprime os numeros de uma sequencia, dado um ponteiro *seq* e um *tamanho*.
+/* Registra um passo nno histórico, atualizando quantas referências e quantas faltas
+de página ocorreram, dado um ponteiro traco *t*, número da página solicitada *ref*,
+um ponteiro para a memoria *m*, indicador se houve *falta* (0 ou 1)
+e o número da página que foi removida *vitima*.
 
 Exemplos:
-arq.txt
-1 2 3 4      5
-int tamanho = 0;
-int *seq = carregar_sequencia("seq.txt", &tamanho);
-imprimir_txt(seq,tamanho);
-[1, 2, 3, 4, 5]
+Traco t;
+int n_quadros = 3;
+int total_refs_previstas = 4;
+int verbose = 1;
+iniciar_traco(&t,total_refs_previstas,n_quadros,verbose);
+Memoria *mem = criar_memoria(n_quadros);
+mem->q[0].pagina = 1;
+mem->ocupados = 1;
+registrar_passo(&t, 1, mem, 1, VAZIO);
+destruir_traco(&t);
 */
-void imprimir_txt( const int *seq, int tamanho){
-printf("Sequencia carregada: [");
-    for (int i = 0; i < tamanho; i++) {
-        if (i > 0) {
-            printf(", ");
-        }
-        printf("%d", seq[i]);
+void registrar_passo(Traco *t, int ref, const Memoria *m,
+                    int falta, int vitima) {
+
+    int i = t->total_refs++;
+
+    if (falta) {
+        t->total_faltas++;
     }
-    printf("]\n");
+
+    if (!t->verbose) {
+        return;
+    }
+
+    Passo *p = &t->passos[i];
+
+    p->quadros = malloc(t->n_quadros * sizeof(int));
+
+    if (p->quadros == NULL) {
+        destruir_traco(t);
+        exit(EXIT_FAILURE);
+    }
+
+    p->referencia = ref;
+    p->falta = falta;
+    p->vitima = vitima;
+
+    for (int j = 0; j < t->n_quadros; j++) {
+        p->quadros[j] = m->q[j].pagina;
+    }
+}
+
+/* Imprime um resumo, dado um ponteiro para Traco *t*, e um ponteiro para o algoritmo *algoritmo*.
+Esse resumo contem, o nome do algoritmo, o número de quadros, se verbose verdadeira cada passo,
+o total de referencias, as pages faults e pages hits.
+
+Exemplos:
+Traco t;
+int n_quadros = 3;
+int total_refs_previstas = 4;
+int verbose = 1;
+iniciar_traco(&t,total_refs_previstas,n_quadros,verbose);
+Memoria *mem = criar_memoria(n_quadros);
+mem->q[0].pagina = 1;
+mem->ocupados = 1;
+registrar_passo(&t, 1, mem, 1, VAZIO);
+imprimir_resumo(&t,"FIFO");
+
+Algoritmo: FIFO
+Quadros: 3
+
+Ref	Quadros		Status
+1	[1,-,-]		FAULT
+
+Total de referencias: 1
+Faltas de pagina: 1
+Acertos de pagina: 0
+
+destruir_traco(&t);
+destruir_memoria(mem);
+*/
+void imprimir_resumo(const Traco *t, const char *algoritmo) {
+
+    if (strcmp(algoritmo, "SEGUNDA CHANCE") == 0) {
+        /* Implementado dentro de segunda_chance.c devido ao bit de referencia */
+    } else {
+
+        printf("\nAlgoritmo: %s\n", algoritmo);
+        printf("Quadros: %d\n\n", t->n_quadros);
+
+        if (t->verbose) {
+            printf("Ref\tQuadros\t\tStatus\n");
+
+            for (int i = 0; i < t->total_refs; i++) {
+                const Passo *p = &t->passos[i];
+
+                printf("%d\t[", p->referencia);
+
+                for (int j = 0; j < t->n_quadros; j++) {
+                    if (j > 0) printf(",");
+
+                    if (p->quadros[j] == VAZIO)
+                        printf("-");
+                    else
+                        printf("%d", p->quadros[j]);
+                }
+
+                printf("]\t\t");
+
+                if (p->falta) {
+                    printf("FAULT");
+
+                    if (p->vitima != VAZIO)
+                        printf(" (sai %d)", p->vitima);
+                } else {
+                    printf("HIT");
+                }
+
+                printf("\n");
+            }
+        }
+
+        printf("\n");
+    }
+
+    printf("Total de referencias: %d\n", t->total_refs);
+    printf("Faltas de pagina: %d\n", t->total_faltas);
+    printf("Acertos de pagina: %d\n", t->total_refs - t->total_faltas);
+}
+
+/*Destroi um Traco liberando espaço, dado um ponteiro *t* passado.
+
+Exemplos:
+Traco t;
+int n_quadros = 3;
+int total_refs_previstas = 4;
+int verbose = 1;
+iniciar_traco(&t,total_refs_previstas,n_quadros,verbose);
+destruir_traco(&t);
+*/
+void destruir_traco(Traco *t) {
+    if (t == NULL) return;
+
+    if (t->passos != NULL) {
+        for (int i = 0; i < t->total_refs; i++) {
+            free(t->passos[i].quadros);
+        }
+
+        free(t->passos);
+    }
+
+    *t = (Traco){0};
 }
