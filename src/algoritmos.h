@@ -33,6 +33,7 @@ void lru_substituir(LRU *l, Memoria *m, No *n, int pag, int passo);
 void lru_destruir(LRU *l);
 
 int proxima_ocorrencia(const int *seq, int n, int i, int pag);
+int construir_proximas(const int *seq, int n, int *prox);
 
 void imprimir_verboseSC(const Memoria *m, int referencia, int falta, int vitima);
 
