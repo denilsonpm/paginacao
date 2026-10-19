@@ -34,6 +34,8 @@ void lru_destruir(LRU *l);
 
 int proxima_ocorrencia(const int *seq, int n, int i, int pag);
 
+void imprimir_verboseSC(const Memoria *m, int referencia, int falta, int vitima);
+
 int executar_fifo(const int *seq, int n, int n_quadros, Traco *t);
 int executar_lru(const int *seq, int n, int n_quadros, Traco *t);
 int executar_otimo(const int *seq, int n, int n_quadros, Traco *t);
