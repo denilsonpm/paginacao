@@ -17,18 +17,15 @@ void gerar_sequencia(const char *arquivo, int n, int num_paginas, unsigned int s
     }
 
     srand(semente);
-
-    printf("Arquivo: %s\n", arquivo);
-    printf("Sequencia: ");
-
+ 
     for (int i = 0; i < n; i++) {
         int pagina = rand() % num_paginas;
 
-        fprintf(f, "%d\n", pagina);
-        printf("%d ", pagina);
+        fprintf(f, "%d ", pagina);
+
+        if ((i + 1) % 70 == 0) {
+            fprintf(f, "\n");
+        }
     }
-
-    printf("\n");
-
     fclose(f);
 }
