@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const char *arquivo = "entradas/sequencia2";
+    const char *arquivo = "entradas/sequencia2.txt";
     int quantidade = atoi(argv[1]);
     int num_paginas = atoi(argv[2]);
 
