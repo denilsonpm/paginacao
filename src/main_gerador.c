@@ -9,9 +9,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const char *arquivo = argv[1];
-    int quantidade = atoi(argv[2]);
-    int num_paginas = atoi(argv[3]);
+    const char *arquivo = "entradas/sequencia2";
+    int quantidade = atoi(argv[1]);
+    int num_paginas = atoi(argv[2]);
 
     gerar_sequencia(arquivo, quantidade, num_paginas, 42);
 
