@@ -2,18 +2,30 @@
 #include <stdlib.h>
 #include "gerador.h"
 
-int main(int argc, char *argv[]) {
+void gerar_sequencia(const char *arquivo, int n, int num_paginas, unsigned int semente) {
 
-    if (argc != 4) {
-        printf("Uso: %s <arquivo> <quantidade> <num_paginas>\n", argv[0]);
-        return 1;
+    if (n <= 0 || num_paginas <= 0) {
+        printf("Parametros invalidos.\n");
+        return;
     }
 
-    const char *arquivo = "entradas/sequencia2";
-    int quantidade = atoi(argv[1]);
-    int num_paginas = atoi(argv[2]);
+    FILE *f = fopen(arquivo, "w");
 
-    gerar_sequencia(arquivo, quantidade, num_paginas, 42);
+    if (f == NULL) {
+        perror("Erro ao criar arquivo");
+        return;
+    }
 
-    return 0;
+    srand(semente);
+ 
+    for (int i = 0; i < n; i++) {
+        int pagina = rand() % num_paginas;
+
+        fprintf(f, "%d ", pagina);
+
+        if ((i + 1) % 70 == 0) {
+            fprintf(f, "\n");
+        }
+    }
+    fclose(f);
 }
