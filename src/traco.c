@@ -106,10 +106,11 @@ Acertos de pagina: 0
 destruir_traco(&t);
 destruir_memoria(mem);
 */
+
 void imprimir_resumo(const Traco *t, const char *algoritmo) {
 
-    if (strcmp(algoritmo, "SEGUNDA CHANCE") == 0 || strcmp(algoritmo, "LFU") == 0) {
-        /* Implementado dentro de seus respectivos arquivos devido ao bit de referencia e contador */
+    if (strcmp(algoritmo, "SegundaChance") == 0 || strcmp(algoritmo, "LFU") == 0) {
+        /* Implementado dentro de seus respectivos arquivos */
     } else {
 
         printf("\nAlgoritmo: %s\n", algoritmo);
@@ -150,9 +151,12 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
         printf("\n");
     }
 
+    double taxa = t->total_refs > 0
+        ? (double)t->total_faltas / t->total_refs * 100
+        : 0.0;
+
     printf("Total de referencias: %d\n", t->total_refs);
-    printf("Faltas de pagina: %d\n", t->total_faltas);
-    printf("Acertos de pagina: %d\n", t->total_refs - t->total_faltas);
+    printf("Page Faults: %d (%.2f%%)\n", t->total_faltas, taxa);
 }
 
 /*Destroi um Traco liberando espaço, dado um ponteiro *t* passado.
