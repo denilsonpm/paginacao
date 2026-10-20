@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "gerador.h"
@@ -9,7 +10,7 @@ void gerar_sequencia(const char *arquivo, int n, int num_paginas, unsigned int s
         return;
     }
 
-    FILE *f = fopen("entradas/sequencia2", "w");
+    FILE *f = fopen(arquivo, "w");
 
     if (f == NULL) {
         perror("Erro ao criar arquivo");
