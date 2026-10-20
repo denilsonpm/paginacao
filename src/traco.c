@@ -155,7 +155,7 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
         : 0.0;
 
     printf("Total de referencias: %d\n", t->total_refs);
-    printf("Page Faults: %d (%.2f%%)\n", t->total_faltas, taxa);
+    printf("Page Faults: %d (%.0f%%)\n", t->total_faltas, taxa);
 }
 
 /*Destroi um Traco liberando espaço, dado um ponteiro *t* passado.
