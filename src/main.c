@@ -80,16 +80,15 @@ int main(int argc, char *argv[]) {
             destruir_traco(&t);
         }
     }
+    fclose(csv);
+    free(seq);
+
     int resultado = system("python3 analise.py");
 
     if (resultado != 0) {
         fprintf(stderr, "Erro ao gerar o gráfico.\n");
         return 1;
     }
-
-
-    fclose(csv);
-    free(seq);
 
     return 0;
 }
