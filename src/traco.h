@@ -7,7 +7,7 @@
 typedef struct {
     int referencia; // o número do pagina.
     int *quadros; // estado atual dos quadros da memória
-    int falta; // indica 1 se houve fault, caso contrario 0.
+    int falta; // indica 1 se houve falta, caso contrario 0.
     int vitima; //pagina removida da memória
 } Passo;
 
