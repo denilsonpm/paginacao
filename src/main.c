@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "leitor.h"
 #include "quadros.h"
 #include "traco.h"
@@ -8,24 +9,37 @@
 
 int main(int argc, char *argv[]) {
 
-    if (argc != 3 && argc != 4) {
-        printf("Uso: %s <arquivo> <q_min> [q_max]\n", argv[0]);
+    if (argc < 3 || argc > 5) {
+        printf("Uso: %s <arquivo> <q_min> [q_max] [algoritmo]\n", argv[0]);
+        printf("Algoritmos disponiveis: FIFO, LRU, Otimo, SegundaChance, LFU\n");
+        printf("Respeite letras maiusculas e minusculas, sem espacos.\n");
+        printf("Se nenhum algoritmo for informado, todos serao executados.\n");
         return 1;
     }
 
     const char *arquivo = argv[1];
     int q_min = atoi(argv[2]);
-    int q_max = (argc == 4) ? atoi(argv[3]) : q_min;
+    int q_max = q_min;
+    const char *algoritmo = "Todos";
+
+    if (argc == 4) {
+        char *fim;
+        long valor = strtol(argv[3], &fim, 10);
+
+        if (*fim == '\0') {
+            q_max = atoi(argv[3]);
+        } else {
+            algoritmo = argv[3];
+        }
+    }
+
+    if (argc == 5) {
+        q_max = atoi(argv[3]);
+        algoritmo = argv[4];
+    }
 
     if (q_min < 1 || q_max < q_min) {
         printf("Intervalo de quadros invalido.\n");
-        return 1;
-    }
-
-    int tamanho;
-    int *seq = carregar_sequencia(arquivo, &tamanho);
-
-    if (seq == NULL) {
         return 1;
     }
 
@@ -42,6 +56,37 @@ int main(int argc, char *argv[]) {
         {"LFU", executar_lfu}
     };
 
+    size_t total_algs = sizeof ALGS / sizeof ALGS[0];
+
+    int encontrado = strcmp(algoritmo, "Todos") == 0;
+
+    for (size_t a = 0; a < total_algs; a++) {
+        if (strcmp(algoritmo, ALGS[a].nome) == 0) {
+            encontrado = 1;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Algoritmo '%s' invalido.\n", algoritmo);
+        printf("Algoritmos disponiveis: ");
+
+        for (size_t a = 0; a < total_algs; a++) {
+            printf("%s%s", ALGS[a].nome,
+                a + 1 < total_algs ? ", " : "\n");
+        }
+
+        printf("Respeite letras maiusculas e minusculas, sem espacos.\n");
+        return 1;
+    }
+
+    int tamanho;
+    int *seq = carregar_sequencia(arquivo, &tamanho);
+
+    if (seq == NULL) {
+        return 1;
+    }
+
     FILE *csv = fopen("resultados/resultados.csv", "w");
 
     if (csv == NULL) {
@@ -52,7 +97,13 @@ int main(int argc, char *argv[]) {
 
     fprintf(csv, "Algoritmo,Quadros,TotalRefs,Faltas,Taxa\n");
 
-    for (size_t a = 0; a < sizeof ALGS / sizeof ALGS[0]; a++) {
+    for (size_t a = 0; a < total_algs; a++) {
+
+        if (strcmp(algoritmo, "Todos") != 0 &&
+            strcmp(algoritmo, ALGS[a].nome) != 0) {
+            continue;
+        }
+
         for (int q = q_min; q <= q_max; q++) {
 
             printf("\nExecutando %s com %d quadros...\n", ALGS[a].nome, q);
@@ -80,13 +131,14 @@ int main(int argc, char *argv[]) {
             destruir_traco(&t);
         }
     }
+
     fclose(csv);
     free(seq);
 
     int resultado = system("python3 analise.py");
 
     if (resultado != 0) {
-        fprintf(stderr, "Erro ao gerar o gráfico.\n");
+        fprintf(stderr, "Erro ao gerar o grafico.\n");
         return 1;
     }
 
