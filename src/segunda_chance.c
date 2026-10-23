@@ -86,12 +86,12 @@ void imprimir_verboseSC(const Memoria *m, int referencia, int falta, int vitima)
     printf("]\t\t");
 
     if (falta) {
-        printf("FAULT");
+        printf("FALTA");
 
         if (vitima != VAZIO)
             printf(" (sai %d)", vitima);
     } else {
-        printf("HIT");
+        printf("ACERTO");
     }
 
     printf("\n");

@@ -22,9 +22,6 @@ void iniciar_traco(Traco *t, int n, int n_quadros, int verbose) {
     if (verbose) {
         t->passos = calloc(n, sizeof(Passo));
 
-        if (t->passos == NULL) {
-            exit(EXIT_FAILURE);
-        }
     }
 }
 
@@ -61,11 +58,6 @@ void registrar_passo(Traco *t, int ref, const Memoria *m,
     Passo *p = &t->passos[i];
 
     p->quadros = malloc(t->n_quadros * sizeof(int));
-
-    if (p->quadros == NULL) {
-        destruir_traco(t);
-        exit(EXIT_FAILURE);
-    }
 
     p->referencia = ref;
     p->falta = falta;
@@ -135,12 +127,12 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
                 printf("]\t\t");
 
                 if (p->falta) {
-                    printf("FAULT");
+                    printf("Falta");
 
                     if (p->vitima != VAZIO)
                         printf(" (sai %d)", p->vitima);
                 } else {
-                    printf("HIT");
+                    printf("Acerto");
                 }
 
                 printf("\n");
@@ -169,8 +161,6 @@ iniciar_traco(&t,total_refs_previstas,n_quadros,verbose);
 destruir_traco(&t);
 */
 void destruir_traco(Traco *t) {
-    if (t == NULL) return;
-
     if (t->passos != NULL) {
         for (int i = 0; i < t->total_refs; i++) {
             free(t->passos[i].quadros);
