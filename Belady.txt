@@ -1,0 +1,2 @@
+# Sequência que permite observar a anomalia de belady
+1 2 3 4 1 2 5 1 2 3 4 5

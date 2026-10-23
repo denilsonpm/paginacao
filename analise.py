@@ -1,68 +1,52 @@
-import csv
-from pathlib import Path
 
+import csv
 import matplotlib.pyplot as plt
 
 
-BASE = Path(__file__).resolve().parent
-CSV = BASE / "resultados" / "resultados.csv"
-SAIDA = BASE / "resultados" / "grafico_faltas.png"
-
-ALGORITMOS = {
-    "FIFO": ("FIFO", "o", "-"),
-    "LFU": ("LFU", "s", "-"),
-    "LRU": ("LRU", "^", "-"),
-    "Otimo": ("Otimo", "D", "--"),
-    "SegundaChance": ("Segunda Chance", "v", "-"),
-}
-
-
 def main():
-    dados = {nome: [] for nome in ALGORITMOS}
+    caminho_csv = "resultados/resultados.csv"
+    caminho_grafico = "resultados/grafico_faltas.png"
 
-    try:
-        with CSV.open("r", encoding="utf-8-sig", newline="") as arquivo:
-            leitor = csv.DictReader(arquivo)
+    algoritmos = ["FIFO", "LRU", "Otimo", "SegundaChance", "LFU"]
 
-            for linha in leitor:
-                algoritmo = linha["Algoritmo"].strip()
-                if algoritmo in dados:
-                    quadros = int(linha["Quadros"])
-                    faltas = int(linha["Faltas"])
-                    dados[algoritmo].append((quadros, faltas))
-    except (OSError, ValueError, KeyError) as erro:
-        print(f"Erro ao ler o CSV: {erro}")
-        return
+    dados = {alg: [] for alg in algoritmos}
+
+    with open(caminho_csv, "r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+
+        for linha in leitor:
+            algoritmo = linha["Algoritmo"]
+            quadros = int(linha["Quadros"])
+            faltas = int(linha["Faltas"])
+
+            if algoritmo in dados:
+                dados[algoritmo].append((quadros, faltas))
 
     plt.figure(figsize=(10, 6))
-    todos_quadros = set()
 
-    for algoritmo, (legenda, marcador, estilo) in ALGORITMOS.items():
-        pontos = sorted(dados[algoritmo])
+    encontrou_dados = False
+
+    for algoritmo, pontos in dados.items():
+
         if not pontos:
-            print(f"Aviso: não há dados para {legenda}.")
             continue
 
+        encontrou_dados = True
+
+        pontos.sort()
+
         quadros, faltas = zip(*pontos)
-        todos_quadros.update(quadros)
-        plt.plot(quadros, faltas, marker=marcador, linestyle=estilo, markersize=8, linewidth=2, label=legenda)
 
-    if not todos_quadros:
-        print("Nenhum dado de algoritmo encontrado no CSV.")
-        plt.close()
-        return
+        plt.plot(quadros, faltas, marker="o", label=algoritmo)
 
-    plt.title("Faltas de página por número de quadros")
-    plt.xlabel("Número de quadros (frames)")
-    plt.ylabel("Número de faltas de página")
-    plt.xticks(sorted(todos_quadros))
-    plt.grid(True, linestyle="--", alpha=0.4)
+    plt.title("Comparacao de Page Faults")
+    plt.xlabel("Quantidade de quadros")
+    plt.ylabel("Quantidade de faltas de pagina")
+    plt.grid(True)
     plt.legend()
     plt.tight_layout()
 
-    SAIDA.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(SAIDA, dpi=300)
-    print(f"Gráfico salvo em: {SAIDA}")
+    plt.savefig(caminho_grafico, dpi=300)
     plt.show()
 
 
