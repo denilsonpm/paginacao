@@ -4,6 +4,19 @@
 #include "traco.h"
 #include "algoritmos.h"
 
+/* Executa o Ótimo, dado um ponteiro para sequencia *seq*, o tamanho da sequencia *n*,
+número de quadros *n_quadros* e um ponteiro para um Traco *t*. Retorna 0 se sucesso.
+
+Exemplos:
+int sequencia[] = {1, 2, 3, 3, 1, 2, 5, 1, 2, 3, 4, 5};
+int tamanho_seq = 12;
+int n_quadros = 3;
+Traco t;
+int total_refs_previstas = 4;
+iniciar_traco(&t,total_refs_previstas,n_quadros,1);
+executar_otimo(sequencia, tamanho_seq, n_quadros, &t);
+destruir_traco(&t);
+*/
 int executar_otimo(const int *seq, int n, int n_quadros, Traco *t) {
     Memoria *m = criar_memoria(n_quadros);
     int *prox = malloc((size_t)n * sizeof(int));
@@ -56,6 +69,17 @@ int executar_otimo(const int *seq, int n, int n_quadros, Traco *t) {
     return 0;
 }
 
+/* Constrói o vetor auxiliar 'prox', varrendo a sequência de trás para frente 
+usando uma tabela hash para determinar quando cada página será referenciada novamente,
+dado um ponteiro para sequencia *seq*,o tamanho da sequencia *n* e um ponteiro para um Traco *t*.
+  Retorna 0 se sucesso.
+
+Exemplos:
+int sequencia[] = {1, 2, 3, 3, 1, 2, 5, 1, 2, 3, 4, 5};
+int tamanho_seq = 12;
+int *prox = malloc(n * sizeof(int));
+construir_proximas(seq, n, prox);
+*/
 int construir_proximas(const int *seq, int n, int *prox) {
     No **tabela = calloc((size_t)n, sizeof(No *));
 

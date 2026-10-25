@@ -4,6 +4,20 @@
 #include "traco.h"
 #include "algoritmos.h"
 
+/* Executa o LFU, dado um ponteiro para sequencia *seq*, o tamanho da sequencia *n*,
+número de quadros *n_quadros* e um ponteiro para um Traco *t*. Retorna 0 se sucesso.
+
+Exemplos:
+int sequencia[] = {1, 2, 3, 3, 1, 2, 5, 1, 2, 3, 4, 5};
+int tamanho_seq = 12;
+int n_quadros = 3;
+Traco t;
+int total_refs_previstas = 4;
+iniciar_traco(&t,total_refs_previstas,n_quadros,1);
+executar_segunda_chance(sequencia, tamanho_seq, n_quadros, &t);
+destruir_traco(&t);
+*/
+
 int executar_lfu(const int *seq, int n, int n_quadros, Traco *t) {
   
   Memoria *m = criar_memoria(n_quadros);
@@ -85,7 +99,23 @@ int fila_remover_LFU(Fila *f, Memoria *m) {
     return vitima;
 }
 
+/* Imprime a verbose do LFU, dado um ponteiro para Memoria *m*,a pagina *referencia*,
+a *falta* que só pode ser 0 ou 1, e a pagina removida *vitima*. 
 
+Exemplos:
+Memoria *m = criar_memoria(3);
+m->q[0].pagina = 2;
+m->q[0].contador = 4;
+m->q[1].pagina = 3;
+m->q[1].contador = 1;
+m->ocupados = 2;
+imprimir_verboseLFU(m, 3, 0, VAZIO);
+m->q[2].pagina = 4;
+m->q[2].contador = 1;
+m->ocupados = 3;
+imprimir_verboseLFU(m, 4, 1, 2);
+destruir_memoria(m);
+*/
 void imprimir_verboseLFU(const Memoria *m, int referencia, int falta, int vitima) {
 
     printf("%d\t[", referencia);

@@ -6,11 +6,31 @@
 
 #define NUNCA INT_MAX
 
-typedef struct {int *v; int ini, fim, qtd, cap, pont;} Fila;
+//Representa uma fila
+typedef struct {
+    int *v; // Vetor
+    int ini; // indice do inicio
+    int fim; // indice do fim
+    int qtd; // quantidade armazenada
+    int cap; // capadicade da fila
+    int pont; // ponteiro
+} Fila;
 
-typedef struct No {int pagina; int indice; struct No *prox; struct No *prev;struct No *prox_hash;} No;
-
-typedef struct {No *ini; No *fim; No **tabela; int cap_hash;} LRU;
+//Representa um NO
+typedef struct No {
+    int pagina; //numero da pagina
+    int indice; //indice da ultima posicao da pagina
+    struct No *prox; //Ponteiro para proximo
+    struct No *prev; //Ponteiro para prévio
+    struct No *prox_hash; // Próximo NO do bucket da tabela hash
+} No;
+//Representa uma combinação de uma lista duplamente encadeada com uma tabela hash.
+typedef struct {
+    No *ini; // indice do inicio
+    No *fim; // indice do fim
+    No **tabela; //tabela hash
+    int cap_hash; // capacidade da tabela hash
+} LRU;
 
 Fila criar_fila(int n_quadros);
 void fila_inserir(Fila *f, int x);
