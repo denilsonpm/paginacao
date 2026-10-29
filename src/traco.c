@@ -70,7 +70,7 @@ void registrar_passo(Traco *t, int ref, const Memoria *m,
 
 /* Imprime um resumo, dado um ponteiro para Traco *t*, e um ponteiro para o algoritmo *algoritmo*.
 Esse resumo contem, o nome do algoritmo, o número de quadros, se verbose verdadeira cada passo,
-o total de referencias, as pages faults e pages hits.
+o total de referencias, as faltas e os acertos de pagina.
 
 Exemplos:
 Traco t;
@@ -88,7 +88,7 @@ Algoritmo: FIFO
 Quadros: 3
 
 Ref	Quadros		Status
-1	[1,-,-]		FAULT
+1	[1,-,-]		FALTA
 
 Total de referencias: 1
 Faltas de pagina: 1
@@ -127,12 +127,12 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
                 printf("]\t\t");
 
                 if (p->falta) {
-                    printf("FAULT");
+                    printf("FALTA");
 
                     if (p->vitima != VAZIO)
                         printf(" (sai %d)", p->vitima);
                 } else {
-                    printf("HIT");
+                    printf("ACERTO");
                 }
 
                 printf("\n");
@@ -147,7 +147,8 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
         : 0.0;
 
     printf("Total de referencias: %d\n", t->total_refs);
-    printf("Page Faults: %d (%.0f%%)\n", t->total_faltas, taxa);
+    printf("Faltas de pagina: %d (%.0f%%)\n", t->total_faltas, taxa);
+    printf("Acertos de pagina: %d\n", t->total_refs - t->total_faltas);
 }
 
 /*Destroi um Traco liberando espaço, dado um ponteiro *t* passado.

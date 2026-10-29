@@ -22,5 +22,4 @@ typedef struct {
 Memoria *criar_memoria(int n_quadros); /* todos VAZIO por padrão */
 void destruir_memoria(Memoria *m);
 int buscar(const Memoria *m, int pagina); /* índice ou -1 */
-void imprimir_memoria(Memoria *m);
 #endif

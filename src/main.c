@@ -1,30 +1,64 @@
 
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "leitor.h"
-#include "quadros.h"
 #include "traco.h"
 #include "algoritmos.h"
 
 int main(int argc, char *argv[]) {
 
-    if (argc < 4 || argc > 6) return 1;
-
-    const char *arquivo = argv[1];
+    const char *arquivo = NULL;
     const char *algoritmo = "Todos";
-    int q_min = atoi(argv[2]);
-    int q_max = q_min;
-    int verbose = atoi(argv[argc - 1]);
+    int q_min = 0;
+    int q_max = 0;
+    int verbose = 0;
+    int max_informado = 0;
+    int entrada_manual = 0;
 
-    if (argc == 5) {
-        if (atoi(argv[3]) != 0) q_max = atoi(argv[3]);
-        else algoritmo = argv[3];
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-v") == 0) { //verbose
+            verbose = 1;
+        } else if (strcmp(argv[i], "-f") == 0) { //arquivo
+            arquivo = argv[++i];
+        } else if (strcmp(argv[i], "-m") == 0) { //entrada manual
+            entrada_manual = 1;
+        } else if (strcmp(argv[i], "-q") == 0) { //min_quadros
+            q_min = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "-Q") == 0) { //max_quadros
+            q_max = atoi(argv[++i]);
+            max_informado = 1;
+        } else if (strcmp(argv[i], "-a") == 0) { //algoritmo
+            algoritmo = argv[++i];
+        }
     }
 
-    if (argc == 6) {
-        q_max = atoi(argv[3]);
-        algoritmo = argv[4];
+    if (max_informado == 0) {
+        q_max = q_min;
+    }
+
+    if (entrada_manual) {
+        char *sequencia = NULL;
+        size_t capacidade = 0;
+
+        arquivo = "entradas/sequencia2.txt";
+        printf("Digite a sequencia de paginas separada por virgulas: ");
+        if (getline(&sequencia, &capacidade, stdin) == -1) {
+            free(sequencia);
+            return 1;
+        }
+
+        FILE *entrada = fopen(arquivo, "w");
+        if (entrada == NULL) {
+            perror("Nao foi possivel criar o arquivo de entrada");
+            free(sequencia);
+            return 1;
+        }
+
+        fputs(sequencia, entrada);
+        fclose(entrada);
+        free(sequencia);
     }
 
     typedef int (*AlgoritmoFn)(const int *seq, int n, int n_quadros, Traco *t);
@@ -42,21 +76,13 @@ int main(int argc, char *argv[]) {
 
     size_t total_algs = sizeof ALGS / sizeof ALGS[0];
 
-    int tamanho;
-    int *seq = carregar_sequencia(arquivo, &tamanho);
-
-    if (seq == NULL) {
-        return 1;
-    }
-
     FILE *csv = fopen("resultados/resultados.csv", "w");
 
     if (csv == NULL) {
-        free(seq);
         return 1;
     }
 
-    fprintf(csv, "Algoritmo,Quadros,TotalRefs,Faltas,Taxa\n");
+    fprintf(csv, "Algoritmo,Sequencia,Quadros,TotalRefs,Faltas,Taxa\n");
 
     for (size_t a = 0; a < total_algs; a++) {
 
@@ -65,36 +91,50 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        for (int q = q_min; q <= q_max; q++) {
+        for (int numero_sequencia = 0;; numero_sequencia++) {
+            int tamanho;
+            int *seq = carregar_sequencia(
+                arquivo, ALGS[a].nome, numero_sequencia, &tamanho);
 
-            printf("\nExecutando %s com %d quadros...\n", ALGS[a].nome, q);
-            fflush(stdout);
-
-            Traco t;
-            iniciar_traco(&t, tamanho, q, verbose);
-
-            int resultado = ALGS[a].fn(seq, tamanho, q, &t);
-
-            if (resultado != 0) {
-                destruir_traco(&t);
-                continue;
+            if (tamanho == 0) {
+                free(seq);
+                break;
             }
 
-            imprimir_resumo(&t, ALGS[a].nome);
+            for (int q = q_min; q <= q_max; q++) {
 
-            double taxa = t.total_refs > 0
-                ? (double)t.total_faltas / t.total_refs
-                : 0.0;
+                printf("\nExecutando %s, sequencia %d, com %d quadros...\n",
+                    ALGS[a].nome, numero_sequencia + 1, q);
+                fflush(stdout);
 
-            fprintf(csv, "%s,%d,%d,%d,%.4f\n",
-                ALGS[a].nome, q, t.total_refs, t.total_faltas, taxa);
+                Traco t;
+                iniciar_traco(&t, tamanho, q, verbose);
 
-            destruir_traco(&t);
+                int resultado = ALGS[a].fn(seq, tamanho, q, &t);
+
+                if (resultado != 0) {
+                    destruir_traco(&t);
+                    continue;
+                }
+
+                imprimir_resumo(&t, ALGS[a].nome);
+
+                double taxa = t.total_refs > 0
+                    ? (double)t.total_faltas / t.total_refs
+                    : 0.0;
+
+                fprintf(csv, "%s,%d,%d,%d,%d,%.4f\n",
+                    ALGS[a].nome, numero_sequencia + 1, q,
+                    t.total_refs, t.total_faltas, taxa);
+
+                destruir_traco(&t);
+            }
+
+            free(seq);
         }
     }
 
     fclose(csv);
-    free(seq);
 
     int resultado = system("python3 analise.py");
 

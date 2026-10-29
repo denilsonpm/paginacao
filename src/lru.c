@@ -195,7 +195,7 @@ void listade_inserir_inicio(LRU *l, No *n) {
 }
 
 /* Atualiza a posição de um nó *n* no inicio da lista via ponteiro *l* estrutura LRU,
-movendo para o início para indicar que acabou de ser acessado hit.
+movendo para o início para indicar que acabou de ser acessado.
 
 Exemplos:
 LRU l;

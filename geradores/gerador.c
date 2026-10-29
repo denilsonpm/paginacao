@@ -2,14 +2,18 @@
 #include <stdlib.h>
 #include "gerador.h"
 
-void gerar_sequencia(const char *arquivo, int n, int num_paginas, unsigned int semente) {
+int gerar_sequencia(const char *arquivo, int n, int num_paginas, unsigned int semente) {
 
-    if (num_paginas == 0) {
-        printf("num_paginas nao pode ser zero.\n");
-        return;
+    if (n <= 0 || num_paginas <= 0) {
+        fprintf(stderr, "A quantidade de referencias e paginas deve ser positiva.\n");
+        return 1;
     }
 
     FILE *f = fopen(arquivo, "w");
+    if (f == NULL) {
+        perror("Nao foi possivel criar o arquivo");
+        return 1;
+    }
 
     srand(semente);
  
@@ -23,4 +27,5 @@ void gerar_sequencia(const char *arquivo, int n, int num_paginas, unsigned int s
         }
     }
     fclose(f);
+    return 0;
 }

@@ -24,14 +24,10 @@ def main():
 
     plt.figure(figsize=(10, 6))
 
-    encontrou_dados = False
-
     for algoritmo, pontos in dados.items():
 
         if not pontos:
             continue
-
-        encontrou_dados = True
 
         pontos.sort()
 
@@ -39,7 +35,7 @@ def main():
 
         plt.plot(quadros, faltas, marker="o", label=algoritmo)
 
-    plt.title("Comparacao de Page Faults")
+    plt.title("Comparacao de faltas de pagina")
     plt.xlabel("Quantidade de quadros")
     plt.ylabel("Quantidade de faltas de pagina")
     plt.grid(True)

@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "quadros.h"
-#include <stdio.h>
 
 /*
 Como chamar na main.
@@ -85,29 +84,3 @@ int buscar(const Memoria *m, int pagina) {
     return VAZIO;
 }
 
-/* Imprime as paginas de uma mémoria *m*.
-
-Exemplos:
-Memoria *m = criar_memoria(3);
-imprimir_memoria(m);
-[-,-,-]
-m->q[0].pagina = 2;
-imprimir_memoria(m);
-[2,-,-]
-*/
-void imprimir_memoria(Memoria *m) {
-    if (m->q[0].pagina == VAZIO){
-        printf(", -");
-    } else{
-    printf("[%d", m->q[0].pagina);
-    }
-    for (int i = 1; i < m->n_quadros; i++){
-    	if (m->q[i].pagina == VAZIO){
-    		printf(", -");
-		}
-		else{
-			printf(", %d",m->q[i].pagina);
-		}
-    }
-    printf("]\n");
-}

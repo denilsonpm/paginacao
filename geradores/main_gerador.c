@@ -2,14 +2,16 @@
 #include <stdlib.h>
 #include "gerador.h"
 
-// Para compilar: gcc -Wall -Wextra geradores/main_gerador.c geradores/gerador.c -o gerador
 int main(int argc, char *argv[]) {
 
-    const char *arquivo = "entradas/sequencia2.txt";
+    if (argc != 3) {
+        fprintf(stderr, "Uso: %s QUANTIDADE NUM_PAGINAS\n", argv[0]);
+        return 1;
+    }
+
     int quantidade = atoi(argv[1]);
     int num_paginas = atoi(argv[2]);
+    const char *arquivo = "entradas/sequencia2.txt";
 
-    gerar_sequencia(arquivo, quantidade, num_paginas, 42);
-
-    return 0;
+    return gerar_sequencia(arquivo, quantidade, num_paginas, 42);
 }
