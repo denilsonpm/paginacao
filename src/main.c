@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
+#include <unistd.h>
 #include "leitor.h"
 #include "traco.h"
 #include "algoritmos.h"
@@ -17,22 +19,39 @@ int main(int argc, char *argv[]) {
     int max_informado = 0;
     int entrada_manual = 0;
 
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-v") == 0) { //verbose
+    int opcao;
+
+while ((opcao = getopt(argc, argv, "vf:mq:Q:a:")) != -1) {
+    switch (opcao) {
+        case 'v':
             verbose = 1;
-        } else if (strcmp(argv[i], "-f") == 0) { //arquivo
-            arquivo = argv[++i];
-        } else if (strcmp(argv[i], "-m") == 0) { //entrada manual
+            break;
+
+        case 'f':
+            arquivo = optarg;
+            break;
+
+        case 'm':
             entrada_manual = 1;
-        } else if (strcmp(argv[i], "-q") == 0) { //min_quadros
-            q_min = atoi(argv[++i]);
-        } else if (strcmp(argv[i], "-Q") == 0) { //max_quadros
-            q_max = atoi(argv[++i]);
+            break;
+
+        case 'q':
+            q_min = atoi(optarg);
+            break;
+
+        case 'Q':
+            q_max = atoi(optarg);
             max_informado = 1;
-        } else if (strcmp(argv[i], "-a") == 0) { //algoritmo
-            algoritmo = argv[++i];
-        }
+            break;
+
+        case 'a':
+            algoritmo = optarg;
+            break;
+
+        default:
+            return 1;
     }
+}
 
     if (max_informado == 0) {
         q_max = q_min;
@@ -86,8 +105,8 @@ int main(int argc, char *argv[]) {
 
     for (size_t a = 0; a < total_algs; a++) {
 
-        if (strcmp(algoritmo, "Todos") != 0 &&
-            strcmp(algoritmo, ALGS[a].nome) != 0) {
+        if (strcasecmp(algoritmo, "Todos") != 0 &&
+            strcasecmp(algoritmo, ALGS[a].nome) != 0) {
             continue;
         }
 

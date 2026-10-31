@@ -40,7 +40,6 @@ def main():
             label=f"{algoritmo} - Sequência {sequencia}",
         )
 
-    plt.title("Comparação de faltas de página por sequência")
     plt.xlabel("Quantidade de quadros")
     plt.ylabel("Quantidade de faltas de página")
     plt.grid(True)
@@ -48,7 +47,6 @@ def main():
     plt.tight_layout()
 
     plt.savefig(caminho_grafico, dpi=300)
-    plt.show()
 
 
 if __name__ == "__main__":
