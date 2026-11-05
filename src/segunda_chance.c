@@ -3,6 +3,8 @@
 #include "traco.h"
 #include "algoritmos.h"
 
+extern FILE *historico;
+
 /* Executa o Segunda Chance, dado um ponteiro para sequencia *seq*, o tamanho da sequencia *n*,
 número de quadros *n_quadros* e um ponteiro para um Traco *t*. Retorna 0 se sucesso.
 
@@ -109,29 +111,62 @@ imprimir_verboseSC(m, 10, 0, VAZIO);
 destruir_memoria(m);
 */
 
+
 void imprimir_verboseSC(const Memoria *m, int referencia, int falta, int vitima) {
 
     printf("%d\t[", referencia);
 
-    for (int i = 0; i < m->n_quadros; i++) {
-        if (i > 0) printf(",");
+    if (historico != NULL)
+        fprintf(historico, "%d\t[", referencia);
 
-        if (m->q[i].pagina == VAZIO)
+    for (int i = 0; i < m->n_quadros; i++) {
+        if (i > 0) {
+            printf(",");
+            if (historico != NULL)
+                fprintf(historico, ",");
+        }
+
+        if (m->q[i].pagina == VAZIO) {
             printf("-");
-        else
+            if (historico != NULL)
+                fprintf(historico, "-");
+        } else {
             printf("%d:%d", m->q[i].pagina, m->q[i].bit_ref);
+
+            if (historico != NULL)
+                fprintf(historico, "%d:%d",
+                        m->q[i].pagina, m->q[i].bit_ref);
+        }
     }
 
     printf("]\t\t");
 
+    if (historico != NULL)
+        fprintf(historico, "]\t\t");
+
     if (falta) {
         printf("FALTA");
 
-        if (vitima != VAZIO)
+        if (historico != NULL)
+            fprintf(historico, "FALTA");
+
+        if (vitima != VAZIO) {
             printf(" (sai %d)", vitima);
+
+            if (historico != NULL)
+                fprintf(historico, " (sai %d)", vitima);
+        }
     } else {
         printf("ACERTO");
+
+        if (historico != NULL)
+            fprintf(historico, "ACERTO");
     }
 
     printf("\n");
+
+    if (historico != NULL) {
+        fprintf(historico, "\n");
+        fflush(historico);
+    }
 }

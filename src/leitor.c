@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,8 +14,8 @@ int *seq = carregar_sequencia(
 */
 
 /* Carrega a sequencia da linha correspondente ao algoritmo e ao indice.
-Linhas repetidas para o mesmo algoritmo sao sequencias independentes. Linhas
-com somente numeros sao compartilhadas por todos os algoritmos.
+Linhas repetidas para o mesmo algoritmo sao sequencias independentes.
+Linhas com somente numeros sao compartilhadas por todos os algoritmos.
 
 Exemplo de arquivo:
 (FIFO), 1 2 3 4
@@ -22,8 +23,10 @@ Exemplo de arquivo:
 (LFU), 8 9
 
 A virgula separa o nome do algoritmo; os numeros sao separados por espacos.
+Linhas iniciadas com # sao ignoradas.
 */
-int *carregar_sequencia(const char *caminho, const char *algoritmo, int indice_sequencia, int *tamanho) {
+int *carregar_sequencia(const char *caminho, const char *algoritmo,
+                        int indice_sequencia, int *tamanho) {
     int capacidade = 64;
     int *sequencia = malloc((size_t)capacidade * sizeof(int));
     *tamanho = 0;
@@ -35,7 +38,8 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo, int indice_s
     while (fgets(linha, sizeof linha, arquivo) != NULL) {
         char *nome = strtok(linha, "(), \t\r\n");
         char *valores = strtok(NULL, "\n");
-        if (nome == NULL) continue;
+
+        if (nome == NULL || nome[0] == '#') continue;
 
         char *fim_nome;
         long primeiro_numero = strtol(nome, &fim_nome, 10);
@@ -43,24 +47,30 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo, int indice_s
 
         if (sequencia_comum) {
             if (indice_sequencia != 0) continue;
+
+            if (*tamanho == capacidade) {
+                capacidade *= 2;
+                sequencia = realloc(
+                    sequencia, (size_t)capacidade * sizeof(int)
+                );
+            }
+
+            sequencia[(*tamanho)++] = (int)primeiro_numero;
+
         } else {
             if (strcasecmp(nome, algoritmo) != 0) continue;
+
             if (sequencias_encontradas++ != indice_sequencia) continue;
         }
 
-        if (sequencia_comum) {
-            if (*tamanho == capacidade) {
-                capacidade *= 2;
-                sequencia = realloc(sequencia, (size_t)capacidade * sizeof(int));
-            }
-            sequencia[(*tamanho)++] = (int)primeiro_numero;
-        }
+        char *numero = valores ? strtok(valores, ", \t\r") : NULL;
 
-        char *numero = strtok(valores, ", \t\r");
         while (numero != NULL) {
             if (*tamanho == capacidade) {
                 capacidade *= 2;
-                sequencia = realloc(sequencia, (size_t)capacidade * sizeof(int));
+                sequencia = realloc(
+                    sequencia, (size_t)capacidade * sizeof(int)
+                );
             }
 
             sequencia[(*tamanho)++] = (int)strtol(numero, NULL, 10);
@@ -68,6 +78,8 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo, int indice_s
         }
 
         if (!sequencia_comum) break;
+
+        if (*tamanho > 0) break;
     }
 
     fclose(arquivo);

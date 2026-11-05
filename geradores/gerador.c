@@ -4,17 +4,7 @@
 
 int gerar_sequencia(const char *arquivo, int n, int num_paginas, unsigned int semente) {
 
-    if (n <= 0 || num_paginas <= 0) {
-        fprintf(stderr, "A quantidade de referencias e paginas deve ser positiva.\n");
-        return 1;
-    }
-
     FILE *f = fopen(arquivo, "w");
-    if (f == NULL) {
-        perror("Nao foi possivel criar o arquivo");
-        return 1;
-    }
-
     srand(semente);
  
     for (int i = 0; i < n; i++) {

@@ -3,6 +3,8 @@
 #include <string.h>
 #include "traco.h"
 
+extern FILE *historico;
+
 /* Prepara o ambiente com a memória certa alocada, dado um ponteiro traco *t*,
 número de referencias *n*, numero de quadros disponíveis *n_quadros* e uma flag *verbose*.
 
@@ -98,6 +100,7 @@ destruir_traco(&t);
 destruir_memoria(mem);
 */
 
+
 void imprimir_resumo(const Traco *t, const char *algoritmo) {
 
     if (strcmp(algoritmo, "SegundaChance") == 0 || strcmp(algoritmo, "LFU") == 0) {
@@ -107,39 +110,78 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
         printf("\nAlgoritmo: %s\n", algoritmo);
         printf("Quadros: %d\n\n", t->n_quadros);
 
+        if (historico != NULL) {
+            fprintf(historico, "\nAlgoritmo: %s\n", algoritmo);
+            fprintf(historico, "Quadros: %d\n\n", t->n_quadros);
+        }
+
         if (t->verbose) {
             printf("Ref\tQuadros\t\tStatus\n");
+
+            if (historico != NULL)
+                fprintf(historico, "Ref\tQuadros\t\tStatus\n");
 
             for (int i = 0; i < t->total_refs; i++) {
                 const Passo *p = &t->passos[i];
 
                 printf("%d\t[", p->referencia);
 
-                for (int j = 0; j < t->n_quadros; j++) {
-                    if (j > 0) printf(",");
+                if (historico != NULL)
+                    fprintf(historico, "%d\t[", p->referencia);
 
-                    if (p->quadros[j] == VAZIO)
+                for (int j = 0; j < t->n_quadros; j++) {
+                    if (j > 0) {
+                        printf(",");
+                        if (historico != NULL)
+                            fprintf(historico, ",");
+                    }
+
+                    if (p->quadros[j] == VAZIO) {
                         printf("-");
-                    else
+                        if (historico != NULL)
+                            fprintf(historico, "-");
+                    } else {
                         printf("%d", p->quadros[j]);
+                        if (historico != NULL)
+                            fprintf(historico, "%d", p->quadros[j]);
+                    }
                 }
 
                 printf("]\t\t");
 
+                if (historico != NULL)
+                    fprintf(historico, "]\t\t");
+
                 if (p->falta) {
                     printf("FALTA");
 
-                    if (p->vitima != VAZIO)
+                    if (historico != NULL)
+                        fprintf(historico, "FALTA");
+
+                    if (p->vitima != VAZIO) {
                         printf(" (sai %d)", p->vitima);
+
+                        if (historico != NULL)
+                            fprintf(historico, " (sai %d)", p->vitima);
+                    }
                 } else {
                     printf("ACERTO");
+
+                    if (historico != NULL)
+                        fprintf(historico, "ACERTO");
                 }
 
                 printf("\n");
+
+                if (historico != NULL)
+                    fprintf(historico, "\n");
             }
         }
 
         printf("\n");
+
+        if (historico != NULL)
+            fprintf(historico, "\n");
     }
 
     double taxa = t->total_refs > 0
@@ -149,18 +191,15 @@ void imprimir_resumo(const Traco *t, const char *algoritmo) {
     printf("Total de referencias: %d\n", t->total_refs);
     printf("Faltas de pagina: %d (%.0f%%)\n", t->total_faltas, taxa);
     printf("Acertos de pagina: %d\n", t->total_refs - t->total_faltas);
+
+    if (historico != NULL) {
+        fprintf(historico, "Total de referencias: %d\n", t->total_refs);
+        fprintf(historico, "Faltas de pagina: %d (%.0f%%)\n", t->total_faltas, taxa);
+        fprintf(historico, "Acertos de pagina: %d\n", t->total_refs - t->total_faltas);
+        fflush(historico);
+    }
 }
 
-/*Destroi um Traco liberando espaço, dado um ponteiro *t* passado.
-
-Exemplos:
-Traco t;
-int n_quadros = 3;
-int total_refs_previstas = 4;
-int verbose = 1;
-iniciar_traco(&t,total_refs_previstas,n_quadros,verbose);
-destruir_traco(&t);
-*/
 void destruir_traco(Traco *t) {
     if (t->passos != NULL) {
         for (int i = 0; i < t->total_refs; i++) {

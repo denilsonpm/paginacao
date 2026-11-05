@@ -3,11 +3,8 @@
 #include "gerador.h"
 
 int main(int argc, char *argv[]) {
+    (void)argc;
 
-    if (argc != 3) {
-        fprintf(stderr, "Uso: %s QUANTIDADE NUM_PAGINAS\n", argv[0]);
-        return 1;
-    }
 
     int quantidade = atoi(argv[1]);
     int num_paginas = atoi(argv[2]);

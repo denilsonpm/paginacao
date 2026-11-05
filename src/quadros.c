@@ -31,10 +31,6 @@ Memória *m =criar_memoria(3);
 *m, tal que: m->n_quadros == 3, m->ocupados == 0, m->q[{0,1,2}].pagina == VAZIO
 */
 Memoria *criar_memoria(int n_quadros) {
-    if (n_quadros == 0) {
-        return NULL;
-    }
-
     Memoria *m = malloc(sizeof(Memoria));
 
     m->q = calloc(n_quadros, sizeof(Quadro));
