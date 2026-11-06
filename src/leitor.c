@@ -58,21 +58,18 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
         char *fim_algoritmos = inicio;
 
         while (*fim_algoritmos != ' ' &&
-               *fim_algoritmos != '\t' &&
-               *fim_algoritmos != '\n' &&
-               *fim_algoritmos != '\0') {
+            *fim_algoritmos != '\t' &&
+            *fim_algoritmos != '\n' &&
+            *fim_algoritmos != '\0') {
             fim_algoritmos++;
         }
 
-        *fim_algoritmos = '\0';
-
-        char *valores = fim_algoritmos + 1;
-
-        while (*valores == ' ' || *valores == '\t')
-            valores++;
-
         char nome_algoritmos[256];
-        strcpy(nome_algoritmos, inicio);
+
+        int tamanho_nome = fim_algoritmos - inicio;
+
+        memcpy(nome_algoritmos, inicio, tamanho_nome);
+        nome_algoritmos[tamanho_nome] = '\0';
 
         char *fim_numero;
         strtol(nome_algoritmos, &fim_numero, 10);
@@ -98,6 +95,15 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
 
         if (!selecionado)
             continue;
+
+        char *valores;
+
+        if (sequencia_comum) {
+            valores = inicio;
+        } else {
+            *fim_algoritmos = '\0';
+            valores = fim_algoritmos + 1;
+        }
 
         if (sequencias_encontradas++ != indice_sequencia)
             continue;
