@@ -34,46 +34,55 @@ with open(arquivo, "r", encoding="utf-8", newline="") as f:
         quadros = int(linha["Quadros"])
         faltas = int(linha["Faltas"])
 
-        chave = (sequencia, algoritmo)
+        chave = sequencia
 
         if chave not in dados:
-            dados[chave] = []
+            dados[chave] = {}
 
-        dados[chave].append((quadros, faltas))
+        if algoritmo not in dados[chave]:
+            dados[chave][algoritmo] = []
+
+        dados[chave][algoritmo].append((quadros, faltas))
 
 
 os.makedirs("resultados/graficos", exist_ok=True)
 
-for (sequencia, algoritmo), pontos in dados.items():
-
-    if algoritmo not in algoritmos:
-        continue
-
-    pontos.sort(key=lambda ponto: ponto[0])
-
-    quadros = [ponto[0] for ponto in pontos]
-    faltas = [ponto[1] for ponto in pontos]
+for sequencia, grupos in dados.items():
 
     plt.figure()
 
-    plt.plot(
-        quadros,
-        faltas,
-        marker=marcadores[algoritmo],
-        markersize=8,
-        linewidth=2,
-        label=algoritmo
-    )
+    for algoritmo, pontos in grupos.items():
+
+        if algoritmo not in algoritmos:
+            continue
+
+        pontos.sort(key=lambda ponto: ponto[0])
+
+        quadros = [ponto[0] for ponto in pontos]
+        faltas = [ponto[1] for ponto in pontos]
+
+        plt.plot(
+            quadros,
+            faltas,
+            marker=marcadores[algoritmo],
+            markersize=8,
+            linewidth=2,
+            label=algoritmo
+        )
 
     plt.xlabel("Quantidade de quadros")
     plt.ylabel("Quantidade de faltas de página")
-    plt.xticks(quadros)
+    plt.xticks(sorted(set(
+        ponto[0]
+        for grupo in grupos.values()
+        for ponto in grupo
+    )))
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
 
     plt.savefig(
-        f"resultados/graficos/sequencia_{sequencia}_{algoritmo}.png",
+        f"resultados/graficos/sequencia_{sequencia}.png",
         dpi=300
     )
 
