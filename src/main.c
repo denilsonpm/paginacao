@@ -1,4 +1,3 @@
-
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -164,20 +163,20 @@ int main(int argc, char *argv[]) {
         for (int indice_sequencia = 0; ; indice_sequencia++) {
 
             int tamanho = 0;
+            int numero_sequencia = 0;
 
             int *seq = carregar_sequencia(
                 arquivo,
                 ALGS[a].nome,
                 indice_sequencia,
-                &tamanho
+                &tamanho,
+                &numero_sequencia
             );
 
             if (tamanho == 0) {
                 free(seq);
                 break;
             }
-
-            int numero_sequencia = indice_sequencia + 1;
 
             int q_ini = q_min;
             int q_fim = q_max;

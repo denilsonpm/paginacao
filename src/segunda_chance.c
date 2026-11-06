@@ -28,7 +28,13 @@ int executar_segunda_chance(const int *seq, int n, int n_quadros, Traco *t) {
     printf("\nAlgoritmo: SEGUNDA CHANCE\n");
     printf("Quadros: %d\n\n", n_quadros);
     printf("Ref\tQuadros\t\tStatus\n");
-  }
+
+    if (historico != NULL) {
+        fprintf(historico, "\nAlgoritmo: SEGUNDA CHANCE\n");
+        fprintf(historico, "Quadros: %d\n\n", n_quadros);
+        fprintf(historico, "Ref\tQuadros\t\tStatus\n");
+    }
+}
   
   for (int i = 0; i < n; i++) {
     

@@ -28,7 +28,13 @@ int executar_lfu(const int *seq, int n, int n_quadros, Traco *t) {
     printf("\nAlgoritmo: LFU\n");
     printf("Quadros: %d\n\n", n_quadros);
     printf("Ref\tQuadros\t\tStatus\n");
-  }
+
+    if (historico != NULL) {
+        fprintf(historico, "\nAlgoritmo: LFU\n");
+        fprintf(historico, "Quadros: %d\n\n", n_quadros);
+        fprintf(historico, "Ref\tQuadros\t\tStatus\n");
+    }
+}
   
   for (int i = 0; i < n; i++) {
     

@@ -1,0 +1,372 @@
+Data: 06 de novembro de 2026
+Horario: 15:58:05
+Arquivo: entradas/sequencia4.txt
+Algoritmo: Todos
+
+Executando FIFO, sequencia 1, com 1 quadros...
+
+Algoritmo: FIFO
+Quadros: 1
+
+Ref	Quadros		Status
+1	[1]		FALTA
+2	[2]		FALTA (sai 1)
+3	[3]		FALTA (sai 2)
+4	[4]		FALTA (sai 3)
+1	[1]		FALTA (sai 4)
+2	[2]		FALTA (sai 1)
+5	[5]		FALTA (sai 2)
+1	[1]		FALTA (sai 5)
+2	[2]		FALTA (sai 1)
+3	[3]		FALTA (sai 2)
+4	[4]		FALTA (sai 3)
+5	[5]		FALTA (sai 4)
+
+Total de referencias: 12
+Faltas de pagina: 12 (100%)
+Acertos de pagina: 0
+
+Executando FIFO, sequencia 1, com 2 quadros...
+
+Algoritmo: FIFO
+Quadros: 2
+
+Ref	Quadros		Status
+1	[1,-]		FALTA
+2	[1,2]		FALTA
+3	[3,2]		FALTA (sai 1)
+4	[3,4]		FALTA (sai 2)
+1	[1,4]		FALTA (sai 3)
+2	[1,2]		FALTA (sai 4)
+5	[5,2]		FALTA (sai 1)
+1	[5,1]		FALTA (sai 2)
+2	[2,1]		FALTA (sai 5)
+3	[2,3]		FALTA (sai 1)
+4	[4,3]		FALTA (sai 2)
+5	[4,5]		FALTA (sai 3)
+
+Total de referencias: 12
+Faltas de pagina: 12 (100%)
+Acertos de pagina: 0
+
+Executando FIFO, sequencia 1, com 3 quadros...
+
+Algoritmo: FIFO
+Quadros: 3
+
+Ref	Quadros		Status
+1	[1,-,-]		FALTA
+2	[1,2,-]		FALTA
+3	[1,2,3]		FALTA
+4	[4,2,3]		FALTA (sai 1)
+1	[4,1,3]		FALTA (sai 2)
+2	[4,1,2]		FALTA (sai 3)
+5	[5,1,2]		FALTA (sai 4)
+1	[5,1,2]		ACERTO
+2	[5,1,2]		ACERTO
+3	[5,3,2]		FALTA (sai 1)
+4	[5,3,4]		FALTA (sai 2)
+5	[5,3,4]		ACERTO
+
+Total de referencias: 12
+Faltas de pagina: 9 (75%)
+Acertos de pagina: 3
+
+Executando FIFO, sequencia 1, com 4 quadros...
+
+Algoritmo: FIFO
+Quadros: 4
+
+Ref	Quadros		Status
+1	[1,-,-,-]		FALTA
+2	[1,2,-,-]		FALTA
+3	[1,2,3,-]		FALTA
+4	[1,2,3,4]		FALTA
+1	[1,2,3,4]		ACERTO
+2	[1,2,3,4]		ACERTO
+5	[5,2,3,4]		FALTA (sai 1)
+1	[5,1,3,4]		FALTA (sai 2)
+2	[5,1,2,4]		FALTA (sai 3)
+3	[5,1,2,3]		FALTA (sai 4)
+4	[4,1,2,3]		FALTA (sai 5)
+5	[4,5,2,3]		FALTA (sai 1)
+
+Total de referencias: 12
+Faltas de pagina: 10 (83%)
+Acertos de pagina: 2
+
+Executando FIFO, sequencia 3, com 1 quadros...
+
+Algoritmo: FIFO
+Quadros: 1
+
+Ref	Quadros		Status
+1	[1]		FALTA
+2	[2]		FALTA (sai 1)
+3	[3]		FALTA (sai 2)
+4	[4]		FALTA (sai 3)
+4	[4]		ACERTO
+4	[4]		ACERTO
+4	[4]		ACERTO
+4	[4]		ACERTO
+4	[4]		ACERTO
+4	[4]		ACERTO
+4	[4]		ACERTO
+4	[4]		ACERTO
+4	[4]		ACERTO
+
+Total de referencias: 13
+Faltas de pagina: 4 (31%)
+Acertos de pagina: 9
+
+Executando FIFO, sequencia 3, com 2 quadros...
+
+Algoritmo: FIFO
+Quadros: 2
+
+Ref	Quadros		Status
+1	[1,-]		FALTA
+2	[1,2]		FALTA
+3	[3,2]		FALTA (sai 1)
+4	[3,4]		FALTA (sai 2)
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+4	[3,4]		ACERTO
+
+Total de referencias: 13
+Faltas de pagina: 4 (31%)
+Acertos de pagina: 9
+
+Executando FIFO, sequencia 3, com 3 quadros...
+
+Algoritmo: FIFO
+Quadros: 3
+
+Ref	Quadros		Status
+1	[1,-,-]		FALTA
+2	[1,2,-]		FALTA
+3	[1,2,3]		FALTA
+4	[4,2,3]		FALTA (sai 1)
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+4	[4,2,3]		ACERTO
+
+Total de referencias: 13
+Faltas de pagina: 4 (31%)
+Acertos de pagina: 9
+
+Executando FIFO, sequencia 3, com 4 quadros...
+
+Algoritmo: FIFO
+Quadros: 4
+
+Ref	Quadros		Status
+1	[1,-,-,-]		FALTA
+2	[1,2,-,-]		FALTA
+3	[1,2,3,-]		FALTA
+4	[1,2,3,4]		FALTA
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+4	[1,2,3,4]		ACERTO
+
+Total de referencias: 13
+Faltas de pagina: 4 (31%)
+Acertos de pagina: 9
+
+Executando LFU, sequencia 1, com 1 quadros...
+
+Algoritmo: LFU
+Quadros: 1
+
+Ref	Quadros		Status
+1	[1:0]		FALTA
+2	[2:0]		FALTA (sai 1)
+3	[3:0]		FALTA (sai 2)
+4	[4:0]		FALTA (sai 3)
+1	[1:0]		FALTA (sai 4)
+2	[2:0]		FALTA (sai 1)
+5	[5:0]		FALTA (sai 2)
+1	[1:0]		FALTA (sai 5)
+2	[2:0]		FALTA (sai 1)
+3	[3:0]		FALTA (sai 2)
+4	[4:0]		FALTA (sai 3)
+5	[5:0]		FALTA (sai 4)
+Total de referencias: 12
+Faltas de pagina: 12 (100%)
+Acertos de pagina: 0
+
+Executando LFU, sequencia 1, com 2 quadros...
+
+Algoritmo: LFU
+Quadros: 2
+
+Ref	Quadros		Status
+1	[1:0,-]		FALTA
+2	[1:0,2:0]		FALTA
+3	[3:0,2:0]		FALTA (sai 1)
+4	[3:0,4:0]		FALTA (sai 2)
+1	[1:0,4:0]		FALTA (sai 3)
+2	[1:0,2:0]		FALTA (sai 4)
+5	[5:0,2:0]		FALTA (sai 1)
+1	[5:0,1:0]		FALTA (sai 2)
+2	[2:0,1:0]		FALTA (sai 5)
+3	[2:0,3:0]		FALTA (sai 1)
+4	[4:0,3:0]		FALTA (sai 2)
+5	[4:0,5:0]		FALTA (sai 3)
+Total de referencias: 12
+Faltas de pagina: 12 (100%)
+Acertos de pagina: 0
+
+Executando LFU, sequencia 1, com 3 quadros...
+
+Algoritmo: LFU
+Quadros: 3
+
+Ref	Quadros		Status
+1	[1:0,-,-]		FALTA
+2	[1:0,2:0,-]		FALTA
+3	[1:0,2:0,3:0]		FALTA
+4	[4:0,2:0,3:0]		FALTA (sai 1)
+1	[4:0,1:0,3:0]		FALTA (sai 2)
+2	[4:0,1:0,2:0]		FALTA (sai 3)
+5	[5:0,1:0,2:0]		FALTA (sai 4)
+1	[5:0,1:1,2:0]		ACERTO
+2	[5:0,1:1,2:1]		ACERTO
+3	[3:0,1:1,2:1]		FALTA (sai 5)
+4	[4:0,1:1,2:1]		FALTA (sai 3)
+5	[5:0,1:1,2:1]		FALTA (sai 4)
+Total de referencias: 12
+Faltas de pagina: 10 (83%)
+Acertos de pagina: 2
+
+Executando LFU, sequencia 1, com 4 quadros...
+
+Algoritmo: LFU
+Quadros: 4
+
+Ref	Quadros		Status
+1	[1:0,-,-,-]		FALTA
+2	[1:0,2:0,-,-]		FALTA
+3	[1:0,2:0,3:0,-]		FALTA
+4	[1:0,2:0,3:0,4:0]		FALTA
+1	[1:1,2:0,3:0,4:0]		ACERTO
+2	[1:1,2:1,3:0,4:0]		ACERTO
+5	[1:1,2:1,5:0,4:0]		FALTA (sai 3)
+1	[1:2,2:1,5:0,4:0]		ACERTO
+2	[1:2,2:2,5:0,4:0]		ACERTO
+3	[1:2,2:2,5:0,3:0]		FALTA (sai 4)
+4	[1:2,2:2,4:0,3:0]		FALTA (sai 5)
+5	[1:2,2:2,4:0,5:0]		FALTA (sai 3)
+Total de referencias: 12
+Faltas de pagina: 8 (67%)
+Acertos de pagina: 4
+
+Executando LFU, sequencia 2, com 1 quadros...
+
+Algoritmo: LFU
+Quadros: 1
+
+Ref	Quadros		Status
+1	[1:0]		FALTA
+2	[2:0]		FALTA (sai 1)
+3	[3:0]		FALTA (sai 2)
+4	[4:0]		FALTA (sai 3)
+5	[5:0]		FALTA (sai 4)
+6	[6:0]		FALTA (sai 5)
+7	[7:0]		FALTA (sai 6)
+8	[8:0]		FALTA (sai 7)
+1	[1:0]		FALTA (sai 8)
+2	[2:0]		FALTA (sai 1)
+4	[4:0]		FALTA (sai 2)
+5	[5:0]		FALTA (sai 4)
+6	[6:0]		FALTA (sai 5)
+Total de referencias: 13
+Faltas de pagina: 13 (100%)
+Acertos de pagina: 0
+
+Executando LFU, sequencia 2, com 2 quadros...
+
+Algoritmo: LFU
+Quadros: 2
+
+Ref	Quadros		Status
+1	[1:0,-]		FALTA
+2	[1:0,2:0]		FALTA
+3	[3:0,2:0]		FALTA (sai 1)
+4	[3:0,4:0]		FALTA (sai 2)
+5	[5:0,4:0]		FALTA (sai 3)
+6	[5:0,6:0]		FALTA (sai 4)
+7	[7:0,6:0]		FALTA (sai 5)
+8	[7:0,8:0]		FALTA (sai 6)
+1	[1:0,8:0]		FALTA (sai 7)
+2	[1:0,2:0]		FALTA (sai 8)
+4	[4:0,2:0]		FALTA (sai 1)
+5	[4:0,5:0]		FALTA (sai 2)
+6	[6:0,5:0]		FALTA (sai 4)
+Total de referencias: 13
+Faltas de pagina: 13 (100%)
+Acertos de pagina: 0
+
+Executando LFU, sequencia 2, com 3 quadros...
+
+Algoritmo: LFU
+Quadros: 3
+
+Ref	Quadros		Status
+1	[1:0,-,-]		FALTA
+2	[1:0,2:0,-]		FALTA
+3	[1:0,2:0,3:0]		FALTA
+4	[4:0,2:0,3:0]		FALTA (sai 1)
+5	[4:0,5:0,3:0]		FALTA (sai 2)
+6	[4:0,5:0,6:0]		FALTA (sai 3)
+7	[7:0,5:0,6:0]		FALTA (sai 4)
+8	[7:0,8:0,6:0]		FALTA (sai 5)
+1	[7:0,8:0,1:0]		FALTA (sai 6)
+2	[2:0,8:0,1:0]		FALTA (sai 7)
+4	[2:0,4:0,1:0]		FALTA (sai 8)
+5	[2:0,4:0,5:0]		FALTA (sai 1)
+6	[6:0,4:0,5:0]		FALTA (sai 2)
+Total de referencias: 13
+Faltas de pagina: 13 (100%)
+Acertos de pagina: 0
+
+Executando LFU, sequencia 2, com 4 quadros...
+
+Algoritmo: LFU
+Quadros: 4
+
+Ref	Quadros		Status
+1	[1:0,-,-,-]		FALTA
+2	[1:0,2:0,-,-]		FALTA
+3	[1:0,2:0,3:0,-]		FALTA
+4	[1:0,2:0,3:0,4:0]		FALTA
+5	[5:0,2:0,3:0,4:0]		FALTA (sai 1)
+6	[5:0,6:0,3:0,4:0]		FALTA (sai 2)
+7	[5:0,6:0,7:0,4:0]		FALTA (sai 3)
+8	[5:0,6:0,7:0,8:0]		FALTA (sai 4)
+1	[1:0,6:0,7:0,8:0]		FALTA (sai 5)
+2	[1:0,2:0,7:0,8:0]		FALTA (sai 6)
+4	[1:0,2:0,4:0,8:0]		FALTA (sai 7)
+5	[1:0,2:0,4:0,5:0]		FALTA (sai 8)
+6	[6:0,2:0,4:0,5:0]		FALTA (sai 1)
+Total de referencias: 13
+Faltas de pagina: 13 (100%)
+Acertos de pagina: 0
