@@ -27,7 +27,8 @@ static const struct {
 int main(int argc, char *argv[]) {
 
     char *arquivo = NULL;
-    char *algoritmo = "Todos";
+    char *algoritmo = 'n';
+    char *nome = 'n';
 
     int q_min = 0;
     int q_max = 0;
@@ -35,6 +36,7 @@ int main(int argc, char *argv[]) {
     int verbose = 0;
     int entrada_manual = 0;
     int porcentagem = 0;
+
 
     static struct option opcoes[] = {
         {"verbose", no_argument, 0, 'v'},
@@ -44,6 +46,7 @@ int main(int argc, char *argv[]) {
         {"qmax", required_argument, 0, 'Q'},
         {"algoritmo", required_argument, 0, 'a'},
         {"porcentagem", required_argument, 0, 'p'},
+        {"log", no_argument, 0, 'l'},
         {0, 0, 0, 0}
     };
 
@@ -65,11 +68,19 @@ int main(int argc, char *argv[]) {
 
             case 'q':
                 q_min = atoi(optarg);
+                if(q_min <= 0){
+                    printf("O valor de minimo precisa ser maior que 0!\n");
+                    return 1;
+                }
                 break;
 
             case 'Q':
                 q_max = atoi(optarg);
                 max_informado = 1;
+                if (q_max <= 0){
+                    printf("O valor de maximo precisa ser maior que 0!\n");
+                    return 1;
+                }
                 break;
 
             case 'a':
@@ -78,7 +89,14 @@ int main(int argc, char *argv[]) {
 
             case 'p':
                 porcentagem = atoi(optarg);
+                if (porcentagem <= 0){
+                    printf("O valor de porcentagem precisa ser maior que 0!\n");
+                    return 1;
+                }
                 break;
+            
+            case 'l':
+                nome = optarg;
         }
     }
 
@@ -102,7 +120,7 @@ int main(int argc, char *argv[]) {
         q_max = q_min;
 
     if (verbose) {
-        historico = fopen("resultados/historico.log", "a");
+        historico = fopen("resultados/historico.log", "w");
 
         time_t agora = time(NULL);
         struct tm *data = localtime(&agora);
@@ -136,9 +154,14 @@ int main(int argc, char *argv[]) {
 
     for (int a = 0; a < total_algoritmos; a++) {
 
-        int selecionado = (strcasecmp(algoritmo, "Todos") == 0);
+        int td_selecionado = 0;
 
-        if (!selecionado) {
+        if (strcasecmp(algoritmo, 'n') == 0){
+            printf("O algoritmo nao foi selecionado ou e invalido");
+            return 1;
+        }else if (strcasecmp(algoritmo,"todos")){td_selecionado = 1;}       
+
+        if (td_selecionado == 0) {
             char lista[256];
             snprintf(lista, sizeof(lista), "%s", algoritmo);
 
@@ -149,7 +172,7 @@ int main(int argc, char *argv[]) {
                     nome++;
 
                 if (strcasecmp(nome, ALGS[a].nome) == 0) {
-                    selecionado = 1;
+                    td_selecionado = 1;
                     break;
                 }
 
@@ -157,7 +180,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (!selecionado)
+        if (td_selecionado == 1)
             continue;
 
         for (int indice_sequencia = 0; ; indice_sequencia++) {
