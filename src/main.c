@@ -1,3 +1,4 @@
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,8 +28,7 @@ static const struct {
 int main(int argc, char *argv[]) {
 
     char *arquivo = NULL;
-    char *algoritmo = 'n';
-    char *nome = 'n';
+    char *algoritmo = "Todos";
 
     int q_min = 0;
     int q_max = 0;
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     int verbose = 0;
     int entrada_manual = 0;
     int porcentagem = 0;
-
+    char *nome_log = NULL;
 
     static struct option opcoes[] = {
         {"verbose", no_argument, 0, 'v'},
@@ -46,13 +46,13 @@ int main(int argc, char *argv[]) {
         {"qmax", required_argument, 0, 'Q'},
         {"algoritmo", required_argument, 0, 'a'},
         {"porcentagem", required_argument, 0, 'p'},
-        {"log", no_argument, 0, 'l'},
+        {"log", required_argument, 0, 'l'},
         {0, 0, 0, 0}
     };
 
     int opcao;
 
-    while ((opcao = getopt_long(argc, argv, "vf:mq:Q:a:p:", opcoes, NULL)) != -1) {
+    while ((opcao = getopt_long(argc, argv, "vf:mq:Q:a:p:l:", opcoes, NULL)) != -1) {
         switch (opcao) {
             case 'v':
                 verbose = 1;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 
             case 'q':
                 q_min = atoi(optarg);
-                if(q_min <= 0){
+                if (q_min <= 0) {
                     printf("O valor de minimo precisa ser maior que 0!\n");
                     return 1;
                 }
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
             case 'Q':
                 q_max = atoi(optarg);
                 max_informado = 1;
-                if (q_max <= 0){
+                if (q_max <= 0) {
                     printf("O valor de maximo precisa ser maior que 0!\n");
                     return 1;
                 }
@@ -89,14 +89,17 @@ int main(int argc, char *argv[]) {
 
             case 'p':
                 porcentagem = atoi(optarg);
-                if (porcentagem <= 0){
-                    printf("O valor de porcentagem precisa ser maior que 0!\n");
+                if (porcentagem <= 0 || porcentagem > 100) {
+                    printf("A porcentagem precisa estar entre 1 e 100!\n");
                     return 1;
                 }
                 break;
-            
+
             case 'l':
-                nome = optarg;
+                nome_log = optarg;
+                break;
+            default:
+                return 1;
         }
     }
 
@@ -108,6 +111,13 @@ int main(int argc, char *argv[]) {
         getline(&sequencia, &capacidade, stdin);
 
         FILE *entrada = fopen("entradas/sequencia2.txt", "w");
+
+        if (entrada == NULL) {
+            printf("Erro ao criar arquivo de entrada!\n");
+            free(sequencia);
+            return 1;
+        }
+
         fprintf(entrada, "%s", sequencia);
         fclose(entrada);
 
@@ -116,14 +126,48 @@ int main(int argc, char *argv[]) {
         free(sequencia);
     }
 
+    if (arquivo == NULL) {
+        printf("Informe um arquivo de entrada!\n");
+        return 1;
+    }
+
+    if (q_min == 0 && porcentagem == 0) {
+        printf("Informe o numero minimo de quadros!\n");
+        return 1;
+    }
+
     if (!max_informado)
         q_max = q_min;
 
+    if (q_max < q_min && porcentagem == 0) {
+        printf("O numero maximo de quadros precisa ser maior ou igual ao minimo!\n");
+        return 1;
+    }
+
+    if (nome_log != NULL) {
+        char caminho_log[256];
+        snprintf(caminho_log, sizeof(caminho_log), "resultados/%s.log", nome_log);
+        historico = fopen(caminho_log, "w");
+
+        if (historico == NULL) {
+            perror("Erro ao abrir arquivo de log");
+            return 1;
+        }
+
+        printf("Log sera salvo em: %s\n", caminho_log);
+    }
+
     if (verbose) {
-        historico = fopen("resultados/historico.log", "w");
 
         time_t agora = time(NULL);
         struct tm *data = localtime(&agora);
+
+        if (data == NULL) {
+            printf("Erro ao obter data e horario!\n");
+            if (historico != NULL)
+                fclose(historico);
+            return 1;
+        }
 
         const char *meses[] = {
             "janeiro", "fevereiro", "marco", "abril",
@@ -138,15 +182,26 @@ int main(int argc, char *argv[]) {
         printf("Arquivo: %s\n", arquivo);
         printf("Algoritmo: %s\n", algoritmo);
 
-        fprintf(historico, "\nData: %02d de %s de %d\n",
-                data->tm_mday, meses[data->tm_mon], data->tm_year + 1900);
-        fprintf(historico, "Horario: %02d:%02d:%02d\n",
-                data->tm_hour, data->tm_min, data->tm_sec);
-        fprintf(historico, "Arquivo: %s\n", arquivo);
-        fprintf(historico, "Algoritmo: %s\n", algoritmo);
+        if (historico != NULL) {
+            fprintf(historico, "\nData: %02d de %s de %d\n",
+                    data->tm_mday, meses[data->tm_mon], data->tm_year + 1900);
+            fprintf(historico, "Horario: %02d:%02d:%02d\n",
+                    data->tm_hour, data->tm_min, data->tm_sec);
+            fprintf(historico, "Arquivo: %s\n", arquivo);
+            fprintf(historico, "Algoritmo: %s\n", algoritmo);
+        }
     }
 
     FILE *csv = fopen("resultados/resultados.csv", "w");
+
+    if (csv == NULL) {
+        printf("Erro ao abrir resultados.csv!\n");
+
+        if (historico != NULL)
+            fclose(historico);
+
+        return 1;
+    }
 
     fprintf(csv, "Algoritmo,Sequencia,Quadros,TotalRefs,Faltas,Taxa\n");
 
@@ -156,10 +211,9 @@ int main(int argc, char *argv[]) {
 
         int td_selecionado = 0;
 
-        if (strcasecmp(algoritmo, 'n') == 0){
-            printf("O algoritmo nao foi selecionado ou e invalido");
-            return 1;
-        }else if (strcasecmp(algoritmo,"todos")){td_selecionado = 1;}       
+        if (strcasecmp(algoritmo, "Todos") == 0) {
+            td_selecionado = 1;
+        }
 
         if (td_selecionado == 0) {
             char lista[256];
@@ -180,7 +234,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (td_selecionado == 1)
+        if (td_selecionado == 0)
             continue;
 
         for (int indice_sequencia = 0; ; indice_sequencia++) {
