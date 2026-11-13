@@ -206,8 +206,9 @@ int main(int argc, char *argv[]) {
     fprintf(csv, "Algoritmo,Sequencia,Quadros,TotalRefs,Faltas,Taxa\n");
 
     int total_algoritmos = sizeof(ALGS) / sizeof(ALGS[0]);
+    int sequencia_invalida = 0;
 
-    for (int a = 0; a < total_algoritmos; a++) {
+    for (int a = 0; a < total_algoritmos && !sequencia_invalida; a++) {
 
         int td_selecionado = 0;
 
@@ -252,6 +253,8 @@ int main(int argc, char *argv[]) {
 
             if (tamanho == 0) {
                 free(seq);
+                if (numero_sequencia == -1)
+                    sequencia_invalida = 1;
                 break;
             }
 
@@ -302,6 +305,13 @@ int main(int argc, char *argv[]) {
 
             free(seq);
         }
+    }
+
+    if (sequencia_invalida) {
+        fclose(csv);
+        if (historico != NULL)
+            fclose(historico);
+        return 1;
     }
 
     fclose(csv);

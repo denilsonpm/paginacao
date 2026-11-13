@@ -1,7 +1,9 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+
 #include "leitor.h"
 
 /* Libere a sequencia com free(seq) depois de usa-la.
@@ -19,14 +21,20 @@ Uma linha pode conter varios algoritmos separados por virgula.
 Linhas com somente numeros sao compartilhadas por todos os algoritmos.
 
 Exemplo de arquivo:
-(FIFO,LFU) 1 2 3 4
-(LRU,Otimo) 5 6 7
-(SegundaChance) 8 9
+FIFO,LFU
+1 2 3 4
+
+LRU,Otimo
+5 6 7
+
+SegundaChance
+8 9
 
 Os nomes dos algoritmos sao separados por virgulas.
 Os numeros sao separados por espacos.
 Linhas iniciadas com # sao ignoradas.
 */
+
 int *carregar_sequencia(const char *caminho, const char *algoritmo,
                         int indice_sequencia, int *tamanho,
                         int *numero_sequencia) {
@@ -37,11 +45,21 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
     *tamanho = 0;
     *numero_sequencia = 0;
 
+    if (sequencia == NULL)
+        return NULL;
+
     FILE *arquivo = fopen(caminho, "r");
+
+    if (arquivo == NULL) {
+        free(sequencia);
+        return NULL;
+    }
 
     char linha[4096];
     int sequencias_encontradas = 0;
-    int numero_linha = 0;
+    int numero_bloco = 0;
+    int bloco_ativo = 0;
+    int selecionado = 0;
 
     while (fgets(linha, sizeof linha, arquivo) != NULL) {
 
@@ -53,88 +71,117 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
         if (*inicio == '\0' || *inicio == '\n' || *inicio == '#')
             continue;
 
-        numero_linha++;
+        if ((*inicio >= 'A' && *inicio <= 'Z') ||
+            (*inicio >= 'a' && *inicio <= 'z')) {
 
-        char *fim_algoritmos = inicio;
+            if (bloco_ativo) {
 
-        while (*fim_algoritmos != ' ' &&
-            *fim_algoritmos != '\t' &&
-            *fim_algoritmos != '\n' &&
-            *fim_algoritmos != '\0') {
-            fim_algoritmos++;
-        }
+                if (selecionado) {
 
-        char nome_algoritmos[256];
+                    if (sequencias_encontradas == indice_sequencia) {
+                        *numero_sequencia = numero_bloco;
+                        fclose(arquivo);
+                        return sequencia;
+                    }
 
-        int tamanho_nome = fim_algoritmos - inicio;
+                    sequencias_encontradas++;
+                }
+            }
 
-        memcpy(nome_algoritmos, inicio, tamanho_nome);
-        nome_algoritmos[tamanho_nome] = '\0';
+            bloco_ativo = 1;
+            selecionado = 0;
+            numero_bloco++;
 
-        char *fim_numero;
-        strtol(nome_algoritmos, &fim_numero, 10);
+            char nomes[4096];
 
-        int sequencia_comum = (*fim_numero == '\0');
-        int selecionado = sequencia_comum;
+            strcpy(nomes, inicio);
 
-        if (!sequencia_comum) {
-
-            char *nome = strtok(nome_algoritmos, "(),");
+            char *nome = strtok(nomes, ",");
 
             while (nome != NULL) {
 
-                while (*nome == ' ')
+                while (*nome == ' ' || *nome == '\t')
                     nome++;
+
+                char *fim = nome + strlen(nome) - 1;
+
+                while (fim >= nome &&
+                       (*fim == ' ' || *fim == '\t' ||
+                        *fim == '\n' || *fim == '\r')) {
+                    *fim = '\0';
+                    fim--;
+                }
 
                 if (strcasecmp(nome, algoritmo) == 0)
                     selecionado = 1;
 
-                nome = strtok(NULL, "(),");
+                nome = strtok(NULL, ",");
             }
+
+            continue;
         }
 
-        if (!selecionado)
-            continue;
-
-        char *valores;
-
-        if (sequencia_comum) {
-            valores = inicio;
-        } else {
-            *fim_algoritmos = '\0';
-            valores = fim_algoritmos + 1;
+        if (!bloco_ativo) {
+            bloco_ativo = 1;
+            selecionado = 1;
+            numero_bloco++;
         }
 
-        if (sequencias_encontradas++ != indice_sequencia)
-            continue;
-
-        if (sequencia_comum)
-            valores = inicio;
-
-        *numero_sequencia = numero_linha;
-
-        char *numero = strtok(valores, ", \t\r\n");
+        char *numero = strtok(inicio, " ,\t\r\n");
 
         while (numero != NULL) {
 
-            if (*tamanho == capacidade) {
-                capacidade *= 2;
+            if (selecionado &&
+                sequencias_encontradas == indice_sequencia) {
 
-                sequencia = realloc(
-                    sequencia,
-                    (size_t)capacidade * sizeof(int)
-                );
+                char *fim_numero;
+                long valor = strtol(numero, &fim_numero, 10);
+
+                if (*numero == '\0' || *fim_numero != '\0') {
+                    fprintf(stderr, "Erro: sequencia invalida.\n");
+                    fclose(arquivo);
+                    free(sequencia);
+                    *tamanho = 0;
+                    *numero_sequencia = -1;
+                    return NULL;
+                }
+
+                if (*tamanho == capacidade) {
+
+                    capacidade *= 2;
+
+                    int *temporario = realloc(
+                        sequencia,
+                        (size_t)capacidade * sizeof(int)
+                    );
+
+                    if (temporario == NULL) {
+                        free(sequencia);
+                        fclose(arquivo);
+                        *tamanho = 0;
+                        return NULL;
+                    }
+
+                    sequencia = temporario;
+                }
+
+                sequencia[(*tamanho)++] = (int)valor;
             }
 
-            sequencia[(*tamanho)++] = (int)strtol(numero, NULL, 10);
-
-            numero = strtok(NULL, ", \t\r\n");
+            numero = strtok(NULL, " ,\t\r\n");
         }
+    }
 
-        break;
+    if (bloco_ativo && selecionado &&
+        sequencias_encontradas == indice_sequencia) {
+
+        *numero_sequencia = numero_bloco;
+        fclose(arquivo);
+        return sequencia;
     }
 
     fclose(arquivo);
+    free(sequencia);
 
-    return sequencia;
+    return NULL;
 }
