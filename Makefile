@@ -1,7 +1,12 @@
-all:
+all: simulador gerador
+
+simulador:
 	gcc -Wall -Wextra src/*.c -o simulador
 
-clean:
-	rm -f simulador
+gerador: 
+	gcc -Wall -Wextra geradores/*.c -o gerador
 
-.PHONY: all clean
+clean:
+	rm -f simulador gerador
+
+.PHONY: all clean simulador gerador
