@@ -10,8 +10,20 @@
 Sempre execute na raiz do projeto. \
 A seguir estão os passos de como executar o gerador de sequência e o simulador. 
 
+### Compilação do gerador e do simulador
+
+Para criar ->
+
+make (para ambos) \
+make gerador \
+make simulador 
+
+Para remover os arquivos gerados ->
+
+make clean 
+
 ## Gerador:
-gcc -Wall -Wextra geradores/main_gerador.c geradores/gerador.c -o gerador \
+
 *A nova sequencia será criada na *sequencia2.txt*.
 
 ### Forma de execução:
@@ -32,8 +44,6 @@ v->variedade do número de páginas. Obs.: começa em 0 e vai até v - 1
 6 0 1 1 2 8 1 0 5 3 4 3 7 4 6 2
 
 ## Simulador:
-
-make
 
 ### Forma de execução e flags disponíveis:
 
