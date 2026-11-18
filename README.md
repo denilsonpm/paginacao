@@ -52,7 +52,7 @@ v->variedade do número de páginas. Obs.: começa em 0 e vai até v - 1
 Tipos de flags:
 | flag curta/longa | argumento | o que faz | Obrigatória? |
 | :--- | :---: | :--- | :---: |
-|- f ou --arquivo | caminho. Ex.: sequencia1.txt | LÊ as referencias do arq.txt escolhido. | Sim, exceto se usar -m|
+|- f ou --arquivo | caminho. Ex.: sequencia1.txt | Lê as referencias do arq.txt escolhido. | Sim, exceto se usar -m|
 |- m ou --manual | - | Depois de executar abre um campo para escrever números. Ex.: 1,2,3,4,5. Depois lê as referencias digitadas. | Sim, exceto se usar -f |
 |- q ou --qmin | número maior que 0 | Número mínimo de quadros | Sim, exceto se usar -p |
 |- Q ou --qmax | número maior que 0 | Número máximo de quadros, tem que ser maior que o mínimo de quadros | Não |
