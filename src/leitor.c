@@ -1,9 +1,7 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-
 #include "leitor.h"
 
 /* Libere a sequencia com free(seq) depois de usa-la.
@@ -71,8 +69,11 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
         if (*inicio == '\0' || *inicio == '\n' || *inicio == '#')
             continue;
 
-        if ((*inicio >= 'A' && *inicio <= 'Z') ||
-            (*inicio >= 'a' && *inicio <= 'z')) {
+        int novo_bloco =
+            ((*inicio >= 'A' && *inicio <= 'Z') ||
+             (*inicio >= 'a' && *inicio <= 'z'));
+
+        if (novo_bloco) {
 
             if (bloco_ativo) {
 
@@ -92,8 +93,18 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
             selecionado = 0;
             numero_bloco++;
 
-            char nomes[4096];
+            char *numeros = inicio;
 
+            while (*numeros != '\0' &&
+                   !(*numeros >= '0' && *numeros <= '9') &&
+                   *numeros != '-') {
+                numeros++;
+            }
+
+            char separador = *numeros;
+            *numeros = '\0';
+
+            char nomes[4096];
             strcpy(nomes, inicio);
 
             char *nome = strtok(nomes, ",");
@@ -103,13 +114,12 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
                 while (*nome == ' ' || *nome == '\t')
                     nome++;
 
-                char *fim = nome + strlen(nome) - 1;
+                char *fim = nome + strlen(nome);
 
-                while (fim >= nome &&
-                       (*fim == ' ' || *fim == '\t' ||
-                        *fim == '\n' || *fim == '\r')) {
-                    *fim = '\0';
-                    fim--;
+                while (fim > nome &&
+                       (fim[-1] == ' ' || fim[-1] == '\t' ||
+                        fim[-1] == '\n' || fim[-1] == '\r')) {
+                    *--fim = '\0';
                 }
 
                 if (strcasecmp(nome, algoritmo) == 0)
@@ -118,26 +128,28 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
                 nome = strtok(NULL, ",");
             }
 
-            continue;
-        }
+            *numeros = separador;
 
-        if (!bloco_ativo) {
+            inicio = numeros;
+
+        } else if (!bloco_ativo) {
+
             bloco_ativo = 1;
             selecionado = 1;
             numero_bloco++;
         }
 
-        char *numero = strtok(inicio, " ,\t\r\n");
+        if (selecionado &&
+            sequencias_encontradas == indice_sequencia) {
 
-        while (numero != NULL) {
+            char *numero = strtok(inicio, " ,\t\r\n");
 
-            if (selecionado &&
-                sequencias_encontradas == indice_sequencia) {
+            while (numero != NULL) {
 
                 char *fim_numero;
                 long valor = strtol(numero, &fim_numero, 10);
 
-                if (*numero == '\0' || *fim_numero != '\0') {
+                if (numero == fim_numero || *fim_numero != '\0') {
                     fprintf(stderr, "Erro: sequencia invalida.\n");
                     fclose(arquivo);
                     free(sequencia);
@@ -166,9 +178,9 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
                 }
 
                 sequencia[(*tamanho)++] = (int)valor;
-            }
 
-            numero = strtok(NULL, " ,\t\r\n");
+                numero = strtok(NULL, " ,\t\r\n");
+            }
         }
     }
 
