@@ -96,8 +96,7 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
             char *numeros = inicio;
 
             while (*numeros != '\0' &&
-                   !(*numeros >= '0' && *numeros <= '9') &&
-                   *numeros != '-') {
+                   !(*numeros >= '0' && *numeros <= '9')) {
                 numeros++;
             }
 
@@ -149,7 +148,10 @@ int *carregar_sequencia(const char *caminho, const char *algoritmo,
                 char *fim_numero;
                 long valor = strtol(numero, &fim_numero, 10);
 
-                if (numero == fim_numero || *fim_numero != '\0') {
+                if (numero == fim_numero ||
+                    *fim_numero != '\0' ||
+                    valor < 0) {
+
                     fprintf(stderr, "Erro: sequencia invalida.\n");
                     fclose(arquivo);
                     free(sequencia);
