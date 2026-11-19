@@ -57,8 +57,8 @@ Tipos de flags:
 |- q ou --qmin | número maior que 0 | Número mínimo de quadros | Sim, exceto se usar -p |
 |- Q ou --qmax | número maior que 0 | Número máximo de quadros, tem que ser maior que o mínimo de quadros | Não |
 |- p ou --porcentagem | número entre 1-100 | Varre de 1 até P% do tamanho da sequência (arredondado para cima) | Sim, exceto se usar -q/-Q |
-|- a ou --arquivo | nome ou combinação separada por virgulas. Ex.: FIFO,LRU,LFU,SegundaChance,Otimo | Algoritmo. Por padrão: Todos | Não, mas executa todos |
-|- v ou --verbose | - | Algoritmo. Por padrão: Todos | Não |
+|- a ou --algoritmo | nome ou combinação separada por virgulas. Ex.: FIFO,LRU,LFU,SegundaChance,Otimo | Algoritmo. Por padrão: Todos | Não, mas executa todos |
+|- v ou --verbose | - | Mostra no terminal os detalhes | Não |
 |- l ou --log | nome | Salva a saída em resultados/"nome".log. Indicar somente o nome. | Não |
 
 ### Exemplos:
