@@ -26,22 +26,30 @@ make clean
 
 *A nova sequencia será criada na *sequencia2.txt*.
 
-### Forma de execução:
-./gerador q v
+### Forma de execução e flags disponíveis:
+./gerador flags
 
-Em que: \
-q->quantidade de referencias \
-v->variedade do número de páginas. Obs.: começa em 0 e vai até v - 1
+| flag curta/longa | argumento | o que faz | Obrigatória? |
+| :--- | :---: | :--- | :---: |
+|- a ou --aleatorio | - | Gera uma sequencia aleátorio | Não, mas executa o aleatorio |
+|- s ou --sequencial | - | Gera uma sequencia sequencial | Não, mas executa o aleatorio |
+|- l ou --localidade | - | Gera uma sequencia com localidade. | Não, mas executa o aleatorio |
+|- q ou --quantidade | número maior que 0 | quantidade de referencias | Sim |
+|- p ou --paginas | número maior que 0 | define a variedade do número de páginas. Obs.: começa em 0 e vai até p - 1 | Sim |
+
 
 ### Exemplos:
-./gerador 10 10 \
+./gerador -q 10 -p 10 \
 6 0 1 1 2 8 1 0 5 3
 
-./gerador 10 15 \
+./gerador --aleatorio -q 10 -p 15 \
 6 0 11 6 7 13 1 0 5 8 
 
-./gerador 16 10 \
-6 0 1 1 2 8 1 0 5 3 4 3 7 4 6 2
+./gerador -s -q 16 -p 10 \
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+
+./gerador --quantidade 20 --paginas 7 -l
+3 3 2 4 4 2 4 2 2 2 4 3 2 2 2 2 2 2 4 6 
 
 ## Simulador:
 
