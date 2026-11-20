@@ -48,7 +48,7 @@ make clean
 ./gerador -s -q 16 -p 10 \
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
 
-./gerador --quantidade 20 --paginas 7 -l
+./gerador --quantidade 20 --paginas 7 -l \
 3 3 2 4 4 2 4 2 2 2 4 3 2 2 2 2 2 2 4 6 
 
 ## Simulador:
